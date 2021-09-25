@@ -1,0 +1,26 @@
+{
+  "author": {
+    "name": "yubessy",
+    "email": "yubessy0@gmail.com"
+  },
+  "description": "Renju bitboard",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.31.0",
+    "@typescript-eslint/parser": "^4.31.0",
+    "eslint": "^7.32.0",
+    "prettier": "^2.4.0",
+    "typescript": "^4.4.0"
+  },
+  "license": "MIT",
+  "main": "dist/index.js",
+  "name": "@renju-note/renju",
+  "repository": "https://github.com/renju-note/renju",
+  "scripts": {
+    "build": "tsc",
+    "format": "prettier --write src/**/*",
+    "lint": "eslint src/**/*",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "types": "dist/index.d.ts",
+  "version": "0.1.0"
+}

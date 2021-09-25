@@ -1,2 +1,3 @@
 # renju
-(experimental) Renju library
+
+Renju bitboard
