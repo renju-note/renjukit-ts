@@ -137,8 +137,9 @@ const minStoneCount = (kind: RowKind): number => {
       return 5
     case RowKind.overline:
       return 6
+    default:
+      return 0
   }
-  return 0
 }
 
 const minBlankCount = (kind: RowKind): number => {
@@ -155,8 +156,9 @@ const minBlankCount = (kind: RowKind): number => {
       return 0
     case RowKind.overline:
       return 0
+    default:
+      return 0
   }
-  return 0
 }
 
 const countOnes = (bits: Bits): number => {
