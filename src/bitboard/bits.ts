@@ -8,6 +8,7 @@ export type Window = {
 }
 
 export type WrappedWindow = {
+  unwrap: () => Window
   satisfies: (stones: Bits, blanks: Bits) => boolean
 }
 
@@ -19,6 +20,7 @@ export type Pattern = {
 }
 
 export type WrappedPattern = {
+  unwrap: () => Pattern
   matches: (stones: Bits, blanks: Bits) => boolean
   start: () => number
   end: () => number
@@ -27,10 +29,12 @@ export type WrappedPattern = {
 }
 
 export const wrapWindow = (self: Window): WrappedWindow => ({
+  unwrap: () => self,
   satisfies: satisfies(self),
 })
 
 export const wrapPattern = (self: Pattern): WrappedPattern => ({
+  unwrap: () => self,
   matches: matches(self),
   start: start(self),
   end: end(self),
