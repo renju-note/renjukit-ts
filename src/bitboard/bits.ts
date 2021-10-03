@@ -12,6 +12,11 @@ export type WrappedWindow = {
   satisfies: (stones: Bits, blanks: Bits) => boolean
 }
 
+export const wrapWindow = (self: Window): WrappedWindow => ({
+  unwrap: () => self,
+  satisfies: satisfies(self),
+})
+
 export type Pattern = {
   filter: Bits
   stones: Bits
@@ -27,11 +32,6 @@ export type WrappedPattern = {
   eye1: () => number | undefined
   eye2: () => number | undefined
 }
-
-export const wrapWindow = (self: Window): WrappedWindow => ({
-  unwrap: () => self,
-  satisfies: satisfies(self),
-})
 
 export const wrapPattern = (self: Pattern): WrappedPattern => ({
   unwrap: () => self,

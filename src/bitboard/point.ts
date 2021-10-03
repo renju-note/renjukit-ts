@@ -18,13 +18,6 @@ export type WrappedPoint = {
   encode: () => number
 }
 
-export type Index = [number, number]
-
-export type WrappedIndex = {
-  unwrap: () => Index
-  toPoint: (direction: Direction) => WrappedPoint
-}
-
 export const wrapPoint = (self: Point): WrappedPoint => ({
   unwrap: () => self,
   toIndex: toIndex(self),
@@ -61,10 +54,43 @@ export const decodePoint = (c: number): WrappedPoint | undefined => {
   }
 }
 
+export type Index = [number, number]
+
+export type WrappedIndex = {
+  unwrap: () => Index
+  toPoint: (direction: Direction) => WrappedPoint
+}
+
 export const wrapIndex = (self: Index): WrappedIndex => ({
   unwrap: () => self,
   toPoint: toPoint(self),
 })
+
+export type Points = Point[]
+
+export type WrappedPoints = {
+  unwrap: () => Points
+  toString: () => string
+  encode: () => Uint8Array
+}
+
+export const wrapPoints = (self: Points): WrappedPoints => ({
+  unwrap: () => self,
+  toString: toStringPoints(self),
+  encode: encodePoints(self),
+})
+
+export const parsePoints = (s: string): WrappedPoints | undefined => {
+  const ps = s.split(",").map(parsePoint)
+  if (ps.some(p => p === undefined)) return undefined
+  return wrapPoints(ps.map(p => p!.unwrap()))
+}
+
+export const decodePoints = (cs: Uint8Array): WrappedPoints | undefined => {
+  const ps = Array.from(cs).map(decodePoint)
+  if (ps.some(p => p === undefined)) return undefined
+  return wrapPoints(ps.map(p => p!.unwrap()))
+}
 
 const toIndex =
   ([x, y]: Point) =>
@@ -158,32 +184,6 @@ const X_CODE_TO_NUM: Record<string, number> = {
   m: 12,
   n: 13,
   o: 14,
-}
-
-export type Points = Point[]
-
-export type WrappedPoints = {
-  unwrap: () => Points
-  toString: () => string
-  encode: () => Uint8Array
-}
-
-export const wrapPoints = (self: Points): WrappedPoints => ({
-  unwrap: () => self,
-  toString: toStringPoints(self),
-  encode: encodePoints(self),
-})
-
-export const parsePoints = (s: string): WrappedPoints | undefined => {
-  const ps = s.split(",").map(parsePoint)
-  if (ps.some(p => p === undefined)) return undefined
-  return wrapPoints(ps.map(p => p!.unwrap()))
-}
-
-export const decodePoints = (cs: Uint8Array): WrappedPoints | undefined => {
-  const ps = Array.from(cs).map(decodePoint)
-  if (ps.some(p => p === undefined)) return undefined
-  return wrapPoints(ps.map(p => p!.unwrap()))
 }
 
 const toStringPoints = (self: Points) => (): string => self.map(p => toString(p)()).join(",")
