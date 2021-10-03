@@ -32,7 +32,7 @@ export const createLine = (size: number): WrappedLine =>
     whites: 0b0,
   })
 
-export const createLineFromString = (s: string): WrappedLine | undefined => {
+export const parseLine = (s: string): WrappedLine | undefined => {
   const chars = s.split("")
   const size = chars.length
   if (size > BOARD_SIZE) return undefined

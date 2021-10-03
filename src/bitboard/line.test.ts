@@ -1,5 +1,5 @@
 import { BOARD_SIZE } from "./bits"
-import { createLine, createLineFromString, WrappedLine } from "./line"
+import { createLine, parseLine, WrappedLine } from "./line"
 import { Player, Row, RowKind } from "./row"
 
 test("createLine", () => {
@@ -26,14 +26,14 @@ test("put", () => {
 })
 
 test("stones", () => {
-  const line = createLineFromString("o-ox-")!
+  const line = parseLine("o-ox-")!
   const result = line.stones()
   const expected = [Player.black, undefined, Player.black, Player.white, undefined]
   expect(result).toEqual(expected)
 })
 
 test("rows", () => {
-  const line = createLineFromString("-oooo---x--x---")!
+  const line = parseLine("-oooo---x--x---")!
 
   let result: Row[]
   let expected: Row[]
@@ -56,7 +56,7 @@ test("toString", () => {
 })
 
 test("createLineFromString", () => {
-  const result = createLineFromString("-o---x----")!
+  const result = parseLine("-o---x----")!
   const expected = createLine(10).put(Player.black, 1).put(Player.white, 5)
   expect(result.unwrap()).toEqual(expected.unwrap())
 })
