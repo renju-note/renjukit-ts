@@ -5,9 +5,9 @@ test("satisfies", () => {
     size: 7,
     target: 0b0111110,
   })
-  expect(window.satisfies(0b0101010, 0b0010100)).toBeTruthy()
-  expect(window.satisfies(0b0101011, 0b0010100)).toBeTruthy()
-  expect(window.satisfies(0b0101010, 0b0010000)).toBeFalsy()
+  expect(window.satisfies(0b0101010, 0b0010100)).toBe(true)
+  expect(window.satisfies(0b0101011, 0b0010100)).toBe(true)
+  expect(window.satisfies(0b0101010, 0b0010000)).toBe(false)
 })
 
 test("matches", () => {
@@ -17,10 +17,10 @@ test("matches", () => {
     blanks: 0b0010100,
     eyes__: 0b0010100,
   })
-  expect(pattern.matches(0b0101010, 0b0010100)).toBeTruthy()
-  expect(pattern.matches(0b0101010, 0b1010101)).toBeTruthy()
-  expect(pattern.matches(0b0101000, 0b0010100)).toBeFalsy()
-  expect(pattern.matches(0b0101001, 0b0010100)).toBeFalsy()
+  expect(pattern.matches(0b0101010, 0b0010100)).toBe(true)
+  expect(pattern.matches(0b0101010, 0b1010101)).toBe(true)
+  expect(pattern.matches(0b0101000, 0b0010100)).toBe(false)
+  expect(pattern.matches(0b0101001, 0b0010100)).toBe(false)
 })
 
 test("start,end,eye1,eye1", () => {
