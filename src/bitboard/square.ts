@@ -1,6 +1,6 @@
 import { BOARD_SIZE } from "./bits"
 import { createLine, Line, parseLine, wrapLine, WrappedLine } from "./line"
-import { Direction, parsePoints, Point, wrapIndex, wrapPoint } from "./point"
+import { Direction, parsePoints, Point, Points, wrapIndex, wrapPoint } from "./point"
 import { Player, Row, RowKind } from "./row"
 
 export type Square = {
@@ -73,7 +73,7 @@ const diagonalLines = (): DiagonalLines => [
   createLine(BOARD_SIZE - 10).unwrap(),
 ]
 
-export const makeSquare = (blacks: Point[], whites: Point[]): WrappedSquare => {
+export const makeSquare = (blacks: Points, whites: Points): WrappedSquare => {
   let square = createSquare()
   for (const p of blacks) {
     square = square.put(Player.black, p)
@@ -214,7 +214,7 @@ const linesAlong = (self: Square, p: Point): IndexedLine[] => {
     : []
   const di = wp.toIndex(Direction.descending).unwrap()[0]
   const dlines: IndexedLine[] = bw(4, di, D_LINE_NUM + 3)
-    ? [[Direction.descending, di, self.alines[di - 4]]]
+    ? [[Direction.descending, di, self.dlines[di - 4]]]
     : []
   return [...vlines, ...hlines, ...alines, ...dlines]
 }
@@ -256,6 +256,8 @@ const overlap =
         return bw(sx, px, ex) && bw(sy, py, ey) && px - sx == py - sy
       case Direction.descending:
         return bw(sx, px, ex) && bw(ey, py, sy) && px - sx == sy - py
+      default:
+        return false
     }
   }
 
@@ -265,16 +267,18 @@ const adjacent =
     if (self.direction !== other.direction) return false
     const [sx, sy] = self.start
     const [ox, oy] = other.start
-    const [xd, yd] = [Math.abs(sx - ox), Math.abs(sy - oy)]
+    const [xd, yd] = [sx - ox, sy - oy]
     switch (self.direction) {
       case Direction.vertical:
-        return xd === 0 && yd === 1
+        return Math.abs(xd) === 0 && Math.abs(yd) === 1
       case Direction.horizontal:
-        return xd === 1 && yd === 0
+        return Math.abs(xd) === 1 && Math.abs(yd) === 0
       case Direction.ascending:
-        return xd === 1 && xd === yd
+        return Math.abs(xd) === 1 && xd === yd
       case Direction.descending:
-        return xd === 1 && xd === -yd
+        return Math.abs(xd) === 1 && xd === -yd
+      default:
+        return false
     }
   }
 
