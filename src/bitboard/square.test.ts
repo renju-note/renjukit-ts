@@ -216,7 +216,7 @@ test("adjacent", () => {
     eye1: undefined,
     eye2: undefined,
   }
-  expect(wrapRowSegment(a).adjacent(b)).toBeFalsy()
+  expect(wrapRowSegment(a).adjacent(b)).toBe(false)
   a = {
     direction: Direction.vertical,
     start: [3, 3],
@@ -231,7 +231,7 @@ test("adjacent", () => {
     eye1: undefined,
     eye2: undefined,
   }
-  expect(wrapRowSegment(a).adjacent(b)).toBeTruthy()
+  expect(wrapRowSegment(a).adjacent(b)).toBe(true)
   a = {
     direction: Direction.vertical,
     start: [3, 3],
@@ -246,7 +246,7 @@ test("adjacent", () => {
     eye1: undefined,
     eye2: undefined,
   }
-  expect(wrapRowSegment(a).adjacent(b)).toBeFalsy()
+  expect(wrapRowSegment(a).adjacent(b)).toBe(false)
   a = {
     direction: Direction.descending,
     start: [3, 9],
@@ -261,7 +261,7 @@ test("adjacent", () => {
     eye1: undefined,
     eye2: undefined,
   }
-  expect(wrapRowSegment(a).adjacent(b)).toBeTruthy()
+  expect(wrapRowSegment(a).adjacent(b)).toBe(true)
 })
 
 const trimLinesString = (s: string): string =>
