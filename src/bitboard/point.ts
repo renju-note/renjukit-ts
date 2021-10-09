@@ -18,13 +18,6 @@ export type WrappedPoint = {
   encode: () => number
 }
 
-export const wrapPoint = (self: Point): WrappedPoint => ({
-  unwrap: () => self,
-  toIndex: toIndex(self),
-  toString: toString(self),
-  encode: encode(self),
-})
-
 export const createPoint = (x: number, y: number): WrappedPoint => wrapPoint([x, y])
 
 export const parsePoint = (s: string): WrappedPoint | undefined => {
@@ -54,43 +47,12 @@ export const decodePoint = (c: number): WrappedPoint | undefined => {
   }
 }
 
-export type Index = [number, number]
-
-export type WrappedIndex = {
-  unwrap: () => Index
-  toPoint: (direction: Direction) => WrappedPoint
-}
-
-export const wrapIndex = (self: Index): WrappedIndex => ({
+export const wrapPoint = (self: Point): WrappedPoint => ({
   unwrap: () => self,
-  toPoint: toPoint(self),
+  toIndex: toIndex(self),
+  toString: toString(self),
+  encode: encode(self),
 })
-
-export type Points = Point[]
-
-export type WrappedPoints = {
-  unwrap: () => Points
-  toString: () => string
-  encode: () => Uint8Array
-}
-
-export const wrapPoints = (self: Points): WrappedPoints => ({
-  unwrap: () => self,
-  toString: toStringPoints(self),
-  encode: encodePoints(self),
-})
-
-export const parsePoints = (s: string): WrappedPoints | undefined => {
-  const ps = s.split(",").map(parsePoint)
-  if (ps.some(p => p === undefined)) return undefined
-  return wrapPoints(ps.map(p => p!.unwrap()))
-}
-
-export const decodePoints = (cs: Uint8Array): WrappedPoints | undefined => {
-  const ps = Array.from(cs).map(decodePoint)
-  if (ps.some(p => p === undefined)) return undefined
-  return wrapPoints(ps.map(p => p!.unwrap()))
-}
 
 const toIndex =
   ([x, y]: Point) =>
@@ -115,6 +77,31 @@ const toIndex =
     }
   }
 
+const toString =
+  ([x, y]: Point) =>
+  (): string => {
+    const sx = X_CODES.charAt(x)
+    const sy = (y + 1).toString()
+    return `${sx}${sy}`
+  }
+
+const encode =
+  ([x, y]: Point) =>
+  (): number =>
+    x * BOARD_SIZE + y
+
+export type Index = [number, number]
+
+export type WrappedIndex = {
+  unwrap: () => Index
+  toPoint: (direction: Direction) => WrappedPoint
+}
+
+export const wrapIndex = (self: Index): WrappedIndex => ({
+  unwrap: () => self,
+  toPoint: toPoint(self),
+})
+
 const toPoint =
   ([i, j]: Index) =>
   (direction: Direction): WrappedPoint => {
@@ -138,18 +125,35 @@ const toPoint =
     }
   }
 
-const toString =
-  ([x, y]: Point) =>
-  (): string => {
-    const sx = X_CODES.charAt(x)
-    const sy = (y + 1).toString()
-    return `${sx}${sy}`
-  }
+export type Points = Point[]
 
-const encode =
-  ([x, y]: Point) =>
-  (): number =>
-    x * BOARD_SIZE + y
+export type WrappedPoints = {
+  unwrap: () => Points
+  toString: () => string
+  encode: () => Uint8Array
+}
+
+export const parsePoints = (s: string): WrappedPoints | undefined => {
+  const ps = s.split(",").map(parsePoint)
+  if (ps.some(p => p === undefined)) return undefined
+  return wrapPoints(ps.map(p => p!.unwrap()))
+}
+
+export const decodePoints = (cs: Uint8Array): WrappedPoints | undefined => {
+  const ps = Array.from(cs).map(decodePoint)
+  if (ps.some(p => p === undefined)) return undefined
+  return wrapPoints(ps.map(p => p!.unwrap()))
+}
+
+export const wrapPoints = (self: Points): WrappedPoints => ({
+  unwrap: () => self,
+  toString: toStringPoints(self),
+  encode: encodePoints(self),
+})
+
+const toStringPoints = (self: Points) => (): string => self.map(p => toString(p)()).join(",")
+
+const encodePoints = (self: Points) => (): Uint8Array => new Uint8Array(self.map(p => encode(p)()))
 
 const X_CODES = "ABCDEFGHIJKLMNO"
 
@@ -185,7 +189,3 @@ const X_CODE_TO_NUM: Record<string, number> = {
   n: 13,
   o: 14,
 }
-
-const toStringPoints = (self: Points) => (): string => self.map(p => toString(p)()).join(",")
-
-const encodePoints = (self: Points) => (): Uint8Array => new Uint8Array(self.map(p => encode(p)()))

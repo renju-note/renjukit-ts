@@ -16,15 +16,6 @@ export type WrappedLine = {
   toString: () => string
 }
 
-export const wrapLine = (self: Line): WrappedLine => ({
-  unwrap: () => self,
-  put: put(self),
-  stones: stones(self),
-  rows: rows(self),
-  eq: eq(self),
-  toString: toString(self),
-})
-
 export const createLine = (size: number): WrappedLine =>
   wrapLine({
     size: Math.min(size, BOARD_SIZE),
@@ -47,6 +38,15 @@ export const parseLine = (s: string): WrappedLine | undefined => {
   }
   return result
 }
+
+export const wrapLine = (self: Line): WrappedLine => ({
+  unwrap: () => self,
+  put: put(self),
+  stones: stones(self),
+  rows: rows(self),
+  eq: eq(self),
+  toString: toString(self),
+})
 
 const put =
   (self: Line) =>

@@ -17,6 +17,12 @@ export const wrapWindow = (self: Window): WrappedWindow => ({
   satisfies: satisfies(self),
 })
 
+const satisfies =
+  (self: Window) =>
+  (stones: Bits, blanks: Bits): boolean => {
+    return (self.target & (stones | blanks)) === self.target
+  }
+
 export type Pattern = {
   filter: Bits
   stones: Bits
@@ -41,12 +47,6 @@ export const wrapPattern = (self: Pattern): WrappedPattern => ({
   eye1: eye1(self),
   eye2: eye2(self),
 })
-
-const satisfies =
-  (self: Window) =>
-  (stones: Bits, blanks: Bits): boolean => {
-    return (self.target & (stones | blanks)) === self.target
-  }
 
 const matches =
   (self: Pattern) =>
