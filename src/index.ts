@@ -1,3 +1,15 @@
-import { hello } from "./some"
-
-export const he = hello
+export {
+  Board,
+  BOARD_SIZE,
+  createBoard,
+  Direction,
+  ForbiddenKind,
+  makeBoard,
+  Player,
+  Point,
+  Points,
+  RowKind,
+  RowSegment,
+  wrapBoard,
+  WrappedBoard,
+} from "./bitboard"
