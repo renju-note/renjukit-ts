@@ -185,7 +185,7 @@ const rowsOn =
       )
       .flat(1)
 
-const toString = (self: Square) => () =>
+const toString = (self: Square) => (): string =>
   self.hlines
     .slice()
     .reverse()
