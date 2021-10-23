@@ -200,6 +200,35 @@ test("parseSquare", () => {
   expect(result.unwrap()).toEqual(expected.unwrap())
 })
 
+test("toString", () => {
+  let square = createSquare()
+  square = square.put(Player.black, [7, 7])
+  square = square.put(Player.white, [8, 8])
+  square = square.put(Player.black, [9, 8])
+  square = square.put(Player.black, [0, 0])
+  square = square.put(Player.white, [0, 14])
+  square = square.put(Player.black, [14, 0])
+  square = square.put(Player.white, [14, 14])
+  const expected = trimLinesString(`
+      x-------------x
+      ---------------
+      ---------------
+      ---------------
+      ---------------
+      ---------------
+      --------xo-----
+      -------o-------
+      ---------------
+      ---------------
+      ---------------
+      ---------------
+      ---------------
+      ---------------
+      o-------------o
+  `)
+  expect(square.toString()).toBe(expected)
+})
+
 test("adjacent", () => {
   let a: RowSegment, b: RowSegment
   a = {
