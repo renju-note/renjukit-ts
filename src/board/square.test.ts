@@ -1,6 +1,6 @@
+import { Player, RowKind } from "./fundamentals"
 import { wrapLine } from "./line"
 import { Direction } from "./point"
-import { Player, RowKind } from "./row"
 import { createSquare, parseSquare, RowSegment, WrappedSquare, wrapRowSegment } from "./square"
 
 test("put", () => {

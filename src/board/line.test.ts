@@ -1,6 +1,6 @@
-import { BOARD_SIZE } from "./bits"
+import { BOARD_SIZE, Player, RowKind } from "./fundamentals"
 import { createLine, parseLine, WrappedLine } from "./line"
-import { Player, Row, RowKind } from "./row"
+import { Row } from "./row"
 
 test("createLine", () => {
   let result: WrappedLine

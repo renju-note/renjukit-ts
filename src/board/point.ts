@@ -1,4 +1,4 @@
-import { BOARD_SIZE } from "./bits"
+import { BOARD_SIZE } from "./fundamentals"
 
 export const directions = ["vertical", "horizontal", "ascending", "descending"] as const
 export type Direction = typeof directions[number]

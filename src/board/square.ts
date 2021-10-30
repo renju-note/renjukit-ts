@@ -1,7 +1,7 @@
-import { BOARD_SIZE } from "./bits"
+import { BOARD_SIZE, Player, RowKind } from "./fundamentals"
 import { createLine, Line, parseLine, wrapLine, WrappedLine } from "./line"
 import { Direction, parsePoints, Point, Points, wrapIndex, wrapPoint } from "./point"
-import { Player, Row, RowKind } from "./row"
+import { Row } from "./row"
 
 export type Square = {
   vlines: OrthogonalLines

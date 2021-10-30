@@ -1,6 +1,4 @@
-export const BOARD_SIZE = 15
-
-export type Bits = number
+import { Bits } from "./fundamentals"
 
 export type Window = {
   size: number

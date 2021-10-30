@@ -1,5 +1,4 @@
 import {
-  Bits,
   B_FIVE,
   B_FIVES,
   B_FOUR,
@@ -27,23 +26,7 @@ import {
   W_TWO,
   W_TWOS,
 } from "./bits"
-
-export type Player = boolean
-export const Player: Record<"black" | "white", Player> = {
-  black: true,
-  white: false,
-} as const
-
-export const rowKinds = ["two", "sword", "three", "four", "five", "overline"] as const
-export type RowKind = typeof rowKinds[number]
-export const RowKind: Record<RowKind, RowKind> = {
-  two: "two",
-  sword: "sword",
-  three: "three",
-  four: "four",
-  five: "five",
-  overline: "overline",
-}
+import { Bits, isBlack, Player, RowKind } from "./fundamentals"
 
 export type Row = {
   start: number
@@ -51,12 +34,6 @@ export type Row = {
   eye1: number | undefined
   eye2: number | undefined
 }
-
-export const isBlack = (player: Player): boolean => player
-
-export const isWhite = (player: Player): boolean => !player
-
-export const opponent = (player: Player): Player => !player
 
 export const scanRows = (
   player: Player,

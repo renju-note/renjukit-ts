@@ -1,5 +1,5 @@
-import { Bits, BOARD_SIZE } from "./bits"
-import { isBlack, Player, Row, RowKind, scanRows } from "./row"
+import { Bits, BOARD_SIZE, isBlack, Player, RowKind } from "./fundamentals"
+import { Row, scanRows } from "./row"
 
 export type Line = {
   size: number

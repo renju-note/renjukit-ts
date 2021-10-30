@@ -1,6 +1,5 @@
-import { BOARD_SIZE } from "./bits"
+import { BOARD_SIZE, Player, RowKind } from "./fundamentals"
 import { Point } from "./point"
-import { Player, RowKind } from "./row"
 import { RowSegment, WrappedSquare, wrapRowSegment } from "./square"
 
 export const forbiddenKinds = ["doubleThree", "doubleFour", "overline"] as const

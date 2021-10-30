@@ -3,8 +3,8 @@ import {
   ForbiddenKind,
   forbiddens as forbiddensFunc,
 } from "./forbidden"
+import { Player, RowKind } from "./fundamentals"
 import { Point, Points } from "./point"
-import { Player, RowKind } from "./row"
 import { createSquare, makeSquare, parseSquare, RowSegment, Square, wrapSquare } from "./square"
 
 export type Board = {

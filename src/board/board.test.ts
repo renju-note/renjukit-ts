@@ -1,7 +1,7 @@
 import { createBoard } from "./board"
 import { ForbiddenKind } from "./forbidden"
+import { Player, RowKind } from "./fundamentals"
 import { Direction } from "./point"
-import { Player, RowKind } from "./row"
 import { RowSegment } from "./square"
 
 test("put,rows,rowsOn,forbiddens,forbidden,toString", () => {

@@ -1,4 +1,5 @@
-import { Player, Row, RowKind, scanRows } from "./row"
+import { Player, RowKind } from "./fundamentals"
+import { Row, scanRows } from "./row"
 
 test("scanRows", () => {
   const stones = 0b0011100
