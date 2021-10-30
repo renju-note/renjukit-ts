@@ -3,7 +3,7 @@ import { Point } from "./point"
 import { Row, wrapRow } from "./row"
 import { Square, WrappedSquare, wrapSquare } from "./square"
 
-export const forbiddenKinds = ["doubleThree", "doubleFour", "overline"] as const
+const forbiddenKinds = ["doubleThree", "doubleFour", "overline"] as const
 export type ForbiddenKind = typeof forbiddenKinds[number]
 export const ForbiddenKind: Record<ForbiddenKind, ForbiddenKind> = {
   doubleThree: "doubleThree",

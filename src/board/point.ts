@@ -1,6 +1,6 @@
 import { BOARD_SIZE } from "./fundamentals"
 
-export const directions = ["vertical", "horizontal", "ascending", "descending"] as const
+const directions = ["vertical", "horizontal", "ascending", "descending"] as const
 export type Direction = typeof directions[number]
 export const Direction: Record<Direction, Direction> = {
   vertical: "vertical",
