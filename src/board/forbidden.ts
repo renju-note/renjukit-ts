@@ -1,6 +1,7 @@
 import { BOARD_SIZE, Player, RowKind } from "./fundamentals"
 import { Point } from "./point"
-import { Row, WrappedSquare, wrapRow } from "./square"
+import { Row, wrapRow } from "./row"
+import { WrappedSquare } from "./square"
 
 export const forbiddenKinds = ["doubleThree", "doubleFour", "overline"] as const
 export type ForbiddenKind = typeof forbiddenKinds[number]

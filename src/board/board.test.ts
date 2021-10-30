@@ -2,7 +2,7 @@ import { createBoard } from "./board"
 import { ForbiddenKind } from "./forbidden"
 import { Player, RowKind } from "./fundamentals"
 import { Direction } from "./point"
-import { Row } from "./square"
+import { Row } from "./row"
 
 test("put,rows,rowsOn,forbiddens,forbidden,toString", () => {
   let board = createBoard()

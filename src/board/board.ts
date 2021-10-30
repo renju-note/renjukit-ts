@@ -5,7 +5,8 @@ import {
 } from "./forbidden"
 import { Player, RowKind } from "./fundamentals"
 import { Point, Points } from "./point"
-import { createSquare, makeSquare, parseSquare, Row, Square, wrapSquare } from "./square"
+import { Row } from "./row"
+import { createSquare, makeSquare, parseSquare, Square, wrapSquare } from "./square"
 
 export type Board = {
   square: Square
