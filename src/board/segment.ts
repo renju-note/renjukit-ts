@@ -1,6 +1,87 @@
-export const BOARD_SIZE = 15
+import { Bits, isBlack, Player, RowKind } from "./fundamentals"
 
-export type Bits = number
+export type Segment = {
+  start: number
+  end: number
+  eye1: number | undefined
+  eye2: number | undefined
+}
+
+export const scanSegments = (
+  player: Player,
+  kind: RowKind,
+  stones: Bits,
+  blanks: Bits,
+  limit: number,
+  offset: number
+): Segment[] => {
+  if (isBlack(player)) {
+    switch (kind) {
+      case RowKind.two:
+        return scan(B_TWO, B_TWOS, stones, blanks, limit, offset)
+      case RowKind.sword:
+        return scan(B_SWORD, B_SWORDS, stones, blanks, limit, offset)
+      case RowKind.three:
+        return scan(B_THREE, B_THREES, stones, blanks, limit, offset)
+      case RowKind.four:
+        return scan(B_FOUR, B_FOURS, stones, blanks, limit, offset)
+      case RowKind.five:
+        return scan(B_FIVE, B_FIVES, stones, blanks, limit, offset)
+      case RowKind.overline:
+        return scan(B_OVERLINE, B_OVERLINES, stones, blanks, limit, offset)
+    }
+  } else {
+    switch (kind) {
+      case RowKind.two:
+        return scan(W_TWO, W_TWOS, stones, blanks, limit, offset)
+      case RowKind.sword:
+        return scan(W_SWORD, W_SWORDS, stones, blanks, limit, offset)
+      case RowKind.three:
+        return scan(W_THREE, W_THREES, stones, blanks, limit, offset)
+      case RowKind.four:
+        return scan(W_FOUR, W_FOURS, stones, blanks, limit, offset)
+      case RowKind.five:
+        return scan(W_FIVE, W_FIVES, stones, blanks, limit, offset)
+      default:
+        return []
+    }
+  }
+  return []
+}
+
+const scan = (
+  window: Window,
+  patterns: Pattern[],
+  stones: Bits,
+  blanks: Bits,
+  limit: number,
+  offset: number
+): Segment[] => {
+  const result: Segment[] = []
+  const size = window.size
+  if (limit < size) {
+    return result
+  }
+  const window_ = wrapWindow(window)
+  for (let i = 0; i <= limit - size; i++) {
+    const stones_ = stones >> i
+    const blanks_ = blanks >> i
+    if (!window_.satisfies(stones_, blanks_)) continue
+    for (const p of patterns) {
+      const p_ = wrapPattern(p)
+      if (!p_.matches(stones_, blanks_)) continue
+      const eye1 = p_.eye1()
+      const eye2 = p_.eye2()
+      result.push({
+        start: p_.start() + i - offset,
+        end: p_.end() + i - offset,
+        eye1: eye1 === undefined ? undefined : eye1 + i - offset,
+        eye2: eye2 === undefined ? undefined : eye2 + i - offset,
+      })
+    }
+  }
+  return result
+}
 
 export type Window = {
   size: number
@@ -178,12 +259,12 @@ const eye2 = (self: Pattern) => (): number | undefined => {
   }
 }
 
-export const B_TWO: Window = {
+const B_TWO: Window = {
   size: 8,
   target: 0b01111110,
 }
 
-export const B_TWOS: Pattern[] = [
+const B_TWOS: Pattern[] = [
   {
     filter: 0b11111111,
     stones: 0b00001100,
@@ -222,12 +303,12 @@ export const B_TWOS: Pattern[] = [
   },
 ]
 
-export const B_THREE: Window = {
+const B_THREE: Window = {
   size: 8,
   target: 0b01111110,
 }
 
-export const B_THREES: Pattern[] = [
+const B_THREES: Pattern[] = [
   {
     filter: 0b11111111,
     stones: 0b00011100,
@@ -254,12 +335,12 @@ export const B_THREES: Pattern[] = [
   },
 ]
 
-export const B_SWORD: Window = {
+const B_SWORD: Window = {
   size: 7,
   target: 0b0111110,
 }
 
-export const B_SWORDS: Pattern[] = [
+const B_SWORDS: Pattern[] = [
   {
     filter: 0b1111111,
     stones: 0b0001110,
@@ -322,12 +403,12 @@ export const B_SWORDS: Pattern[] = [
   },
 ]
 
-export const B_FOUR: Window = {
+const B_FOUR: Window = {
   size: 7,
   target: 0b0111110,
 }
 
-export const B_FOURS: Pattern[] = [
+const B_FOURS: Pattern[] = [
   {
     filter: 0b1111111,
     stones: 0b0011110,
@@ -360,12 +441,12 @@ export const B_FOURS: Pattern[] = [
   },
 ]
 
-export const B_FIVE: Window = {
+const B_FIVE: Window = {
   size: 7,
   target: 0b0111110,
 }
 
-export const B_FIVES: Pattern[] = [
+const B_FIVES: Pattern[] = [
   {
     filter: 0b1111111,
     stones: 0b0111110,
@@ -374,12 +455,12 @@ export const B_FIVES: Pattern[] = [
   },
 ]
 
-export const B_OVERLINE: Window = {
+const B_OVERLINE: Window = {
   size: 6,
   target: 0b111111,
 }
 
-export const B_OVERLINES: Pattern[] = [
+const B_OVERLINES: Pattern[] = [
   {
     filter: 0b111111,
     stones: 0b111111,
@@ -388,12 +469,12 @@ export const B_OVERLINES: Pattern[] = [
   },
 ]
 
-export const W_TWO: Window = {
+const W_TWO: Window = {
   size: 6,
   target: 0b111111,
 }
 
-export const W_TWOS: Pattern[] = [
+const W_TWOS: Pattern[] = [
   {
     filter: 0b111111,
     stones: 0b000110,
@@ -432,12 +513,12 @@ export const W_TWOS: Pattern[] = [
   },
 ]
 
-export const W_THREE: Window = {
+const W_THREE: Window = {
   size: 6,
   target: 0b111111,
 }
 
-export const W_THREES: Pattern[] = [
+const W_THREES: Pattern[] = [
   {
     filter: 0b111111,
     stones: 0b001110,
@@ -464,12 +545,12 @@ export const W_THREES: Pattern[] = [
   },
 ]
 
-export const W_SWORD: Window = {
+const W_SWORD: Window = {
   size: 5,
   target: 0b11111,
 }
 
-export const W_SWORDS: Pattern[] = [
+const W_SWORDS: Pattern[] = [
   {
     filter: 0b11111,
     stones: 0b00111,
@@ -532,12 +613,12 @@ export const W_SWORDS: Pattern[] = [
   },
 ]
 
-export const W_FOUR: Window = {
+const W_FOUR: Window = {
   size: 5,
   target: 0b11111,
 }
 
-export const W_FOURS: Pattern[] = [
+const W_FOURS: Pattern[] = [
   {
     filter: 0b11111,
     stones: 0b01111,
@@ -570,12 +651,12 @@ export const W_FOURS: Pattern[] = [
   },
 ]
 
-export const W_FIVE: Window = {
+const W_FIVE: Window = {
   size: 5,
   target: 0b11111,
 }
 
-export const W_FIVES: Pattern[] = [
+const W_FIVES: Pattern[] = [
   {
     filter: 0b11111,
     stones: 0b11111,

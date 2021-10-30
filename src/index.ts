@@ -5,11 +5,12 @@ export {
   Direction,
   ForbiddenKind,
   makeBoard,
+  parseBoard,
   Player,
   Point,
   Points,
+  Row,
   RowKind,
-  RowSegment,
   wrapBoard,
   WrappedBoard,
-} from "./bitboard"
+} from "./board"

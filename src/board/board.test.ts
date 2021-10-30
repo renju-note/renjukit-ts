@@ -1,11 +1,11 @@
-import { createBoard } from "./board"
+import { createBoard, wrapBoard } from "./board"
 import { ForbiddenKind } from "./forbidden"
+import { Player, RowKind } from "./fundamentals"
 import { Direction } from "./point"
-import { Player, RowKind } from "./row"
-import { RowSegment } from "./square"
+import { Row } from "./row"
 
 test("put,rows,rowsOn,forbiddens,forbidden,toString", () => {
-  let board = createBoard()
+  let board = wrapBoard(createBoard())
   board = board.put(Player.black, [7, 7])
   board = board.put(Player.white, [7, 8])
   board = board.put(Player.black, [9, 9])
@@ -36,7 +36,7 @@ test("put,rows,rowsOn,forbiddens,forbidden,toString", () => {
   `)
   expect(board.toString()).toBe(expected)
 
-  const blackTwos: RowSegment[] = [
+  const blackTwos: Row[] = [
     { direction: Direction.vertical, start: [6, 5], end: [6, 10], eye1: [6, 6], eye2: [6, 7] },
     { direction: Direction.vertical, start: [6, 6], end: [6, 11], eye1: [6, 7], eye2: [6, 10] },
     { direction: Direction.vertical, start: [6, 7], end: [6, 12], eye1: [6, 10], eye2: [6, 11] },
@@ -44,11 +44,11 @@ test("put,rows,rowsOn,forbiddens,forbidden,toString", () => {
     { direction: Direction.horizontal, start: [5, 7], end: [10, 7], eye1: [6, 7], eye2: [9, 7] },
     { direction: Direction.horizontal, start: [6, 7], end: [11, 7], eye1: [9, 7], eye2: [10, 7] },
   ]
-  const whiteTwos: RowSegment[] = [
+  const whiteTwos: Row[] = [
     { direction: Direction.horizontal, start: [4, 6], end: [9, 6], eye1: [6, 6], eye2: [7, 6] },
     { direction: Direction.ascending, start: [6, 7], end: [11, 12], eye1: [9, 10], eye2: [10, 11] },
   ]
-  const whiteThrees: RowSegment[] = [
+  const whiteThrees: Row[] = [
     { direction: Direction.ascending, start: [4, 5], end: [9, 10], eye1: [6, 7], eye2: undefined },
   ]
 

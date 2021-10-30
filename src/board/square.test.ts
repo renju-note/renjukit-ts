@@ -1,10 +1,11 @@
+import { Player, RowKind } from "./fundamentals"
 import { wrapLine } from "./line"
 import { Direction } from "./point"
-import { Player, RowKind } from "./row"
-import { createSquare, parseSquare, RowSegment, WrappedSquare, wrapRowSegment } from "./square"
+import { Row } from "./row"
+import { createSquare, parseSquare, Square, WrappedSquare, wrapSquare } from "./square"
 
 test("put", () => {
-  let square = createSquare()
+  let square = wrapSquare(createSquare())
   square = square.put(Player.black, [7, 7])
   square = square.put(Player.white, [8, 8])
   square = square.put(Player.black, [9, 8])
@@ -121,7 +122,8 @@ test("put", () => {
 })
 
 test("rows,rowsOn", () => {
-  const square = parseSquare(`
+  const square = wrapSquare(
+    parseSquare(`
     ---------------
     ---------------
     ---------------
@@ -138,7 +140,8 @@ test("rows,rowsOn", () => {
     ---------------
     ---------------
   `)!
-  const blackTwos: RowSegment[] = [
+  )
+  const blackTwos: Row[] = [
     {
       direction: Direction.ascending,
       start: [6, 4],
@@ -147,7 +150,7 @@ test("rows,rowsOn", () => {
       eye2: [9, 7],
     },
   ]
-  const whiteSwords: RowSegment[] = [
+  const whiteSwords: Row[] = [
     {
       direction: Direction.horizontal,
       start: [5, 8],
@@ -163,14 +166,14 @@ test("rows,rowsOn", () => {
 })
 
 test("parseSquare", () => {
-  let result: WrappedSquare, expected: WrappedSquare
+  let result: Square, expected: WrappedSquare
 
   result = parseSquare("H8,J9/I9")!
-  expected = createSquare()
+  expected = wrapSquare(createSquare())
   expected = expected.put(Player.black, [7, 7])
   expected = expected.put(Player.white, [8, 8])
   expected = expected.put(Player.black, [9, 8])
-  expect(result.unwrap()).toEqual(expected.unwrap())
+  expect(result).toEqual(expected.unwrap())
 
   result = parseSquare(`
       x-------------x
@@ -189,7 +192,7 @@ test("parseSquare", () => {
       ---------------
       o-------------o
   `)!
-  expected = createSquare()
+  expected = wrapSquare(createSquare())
   expected = expected.put(Player.black, [7, 7])
   expected = expected.put(Player.white, [8, 8])
   expected = expected.put(Player.black, [9, 8])
@@ -197,11 +200,11 @@ test("parseSquare", () => {
   expected = expected.put(Player.white, [0, 14])
   expected = expected.put(Player.black, [14, 0])
   expected = expected.put(Player.white, [14, 14])
-  expect(result.unwrap()).toEqual(expected.unwrap())
+  expect(result).toEqual(expected.unwrap())
 })
 
 test("toString", () => {
-  let square = createSquare()
+  let square = wrapSquare(createSquare())
   square = square.put(Player.black, [7, 7])
   square = square.put(Player.white, [8, 8])
   square = square.put(Player.black, [9, 8])
@@ -227,70 +230,6 @@ test("toString", () => {
       o-------------o
   `)
   expect(square.toString()).toBe(expected)
-})
-
-test("adjacent", () => {
-  let a: RowSegment, b: RowSegment
-  a = {
-    direction: Direction.vertical,
-    start: [3, 3],
-    end: [3, 9],
-    eye1: undefined,
-    eye2: undefined,
-  }
-  b = {
-    direction: Direction.horizontal,
-    start: [3, 3],
-    end: [9, 3],
-    eye1: undefined,
-    eye2: undefined,
-  }
-  expect(wrapRowSegment(a).adjacent(b)).toBe(false)
-  a = {
-    direction: Direction.vertical,
-    start: [3, 3],
-    end: [3, 9],
-    eye1: undefined,
-    eye2: undefined,
-  }
-  b = {
-    direction: Direction.vertical,
-    start: [3, 4],
-    end: [3, 10],
-    eye1: undefined,
-    eye2: undefined,
-  }
-  expect(wrapRowSegment(a).adjacent(b)).toBe(true)
-  a = {
-    direction: Direction.vertical,
-    start: [3, 3],
-    end: [3, 9],
-    eye1: undefined,
-    eye2: undefined,
-  }
-  b = {
-    direction: Direction.vertical,
-    start: [3, 5],
-    end: [3, 11],
-    eye1: undefined,
-    eye2: undefined,
-  }
-  expect(wrapRowSegment(a).adjacent(b)).toBe(false)
-  a = {
-    direction: Direction.descending,
-    start: [3, 9],
-    end: [9, 3],
-    eye1: undefined,
-    eye2: undefined,
-  }
-  b = {
-    direction: Direction.descending,
-    start: [4, 8],
-    end: [10, 2],
-    eye1: undefined,
-    eye2: undefined,
-  }
-  expect(wrapRowSegment(a).adjacent(b)).toBe(true)
 })
 
 const trimLinesString = (s: string): string =>

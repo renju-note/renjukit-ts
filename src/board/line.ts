@@ -1,5 +1,5 @@
-import { Bits, BOARD_SIZE } from "./bits"
-import { isBlack, Player, Row, RowKind, scanRows } from "./row"
+import { Bits, BOARD_SIZE, isBlack, Player, RowKind } from "./fundamentals"
+import { scanSegments, Segment } from "./segment"
 
 export type Line = {
   size: number
@@ -7,27 +7,17 @@ export type Line = {
   whites: Bits
 }
 
-export type WrappedLine = {
-  unwrap: () => Line
-  put: (player: Player, i: number) => WrappedLine
-  stones: () => (Player | undefined)[]
-  rows: (player: Player, kind: RowKind) => Row[]
-  eq: (other: Line) => boolean
-  toString: () => string
-}
+export const createLine = (size: number): Line => ({
+  size: Math.min(size, BOARD_SIZE),
+  blacks: 0b0,
+  whites: 0b0,
+})
 
-export const createLine = (size: number): WrappedLine =>
-  wrapLine({
-    size: Math.min(size, BOARD_SIZE),
-    blacks: 0b0,
-    whites: 0b0,
-  })
-
-export const parseLine = (s: string): WrappedLine | undefined => {
+export const parseLine = (s: string): Line | undefined => {
   const chars = s.split("")
   const size = chars.length
   if (size > BOARD_SIZE) return undefined
-  let result = createLine(size)
+  let result = wrapLine(createLine(size))
   for (let i = 0; i < size; i++) {
     const c = chars[i]
     if (c === "o") {
@@ -36,14 +26,23 @@ export const parseLine = (s: string): WrappedLine | undefined => {
       result = result.put(Player.white, i)
     }
   }
-  return result
+  return result.unwrap()
+}
+
+export type WrappedLine = {
+  unwrap: () => Line
+  put: (player: Player, i: number) => WrappedLine
+  stones: () => (Player | undefined)[]
+  segments: (player: Player, kind: RowKind) => Segment[]
+  eq: (other: Line) => boolean
+  toString: () => string
 }
 
 export const wrapLine = (self: Line): WrappedLine => ({
   unwrap: () => self,
   put: put(self),
   stones: stones(self),
-  rows: rows(self),
+  segments: segments(self),
   eq: eq(self),
   toString: toString(self),
 })
@@ -81,15 +80,15 @@ const stones = (self: Line) => (): (Player | undefined)[] => {
   })
 }
 
-const rows =
+const segments =
   (self: Line) =>
-  (player: Player, kind: RowKind): Row[] => {
+  (player: Player, kind: RowKind): Segment[] => {
     if (!mayContain(self, player, kind)) return []
     const offset = 1
     const stones_ = (isBlack(player) ? self.blacks : self.whites) << 1
     const blanks_ = blanks(self) << 1
     const limit = self.size + offset * 2
-    return scanRows(player, kind, stones_, blanks_, limit, 1)
+    return scanSegments(player, kind, stones_, blanks_, limit, 1)
   }
 
 const eq = (self: Line) => (other: Line) =>
