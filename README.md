@@ -1,3 +1,3 @@
-# renju
+# renjukit-ts
 
-Renju bitboard
+Renju library for TypeScript/JavaScript
