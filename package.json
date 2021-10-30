@@ -3,7 +3,7 @@
     "email": "yubessy0@gmail.com",
     "name": "yubessy"
   },
-  "description": "Renju bitboard",
+  "description": "Renju library for TypeScript/JavaScript",
   "devDependencies": {
     "@types/jest": "^27.0.0",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
@@ -24,8 +24,8 @@
   },
   "license": "MIT",
   "main": "dist/index.js",
-  "name": "@renju-note/renju",
-  "repository": "https://github.com/renju-note/renju",
+  "name": "renjukit",
+  "repository": "https://github.com/renju-note/renjukit-ts",
   "scripts": {
     "build": "tsc",
     "format": "prettier --write src/**/*",
