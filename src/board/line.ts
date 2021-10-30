@@ -1,5 +1,5 @@
 import { Bits, BOARD_SIZE, isBlack, Player, RowKind } from "./fundamentals"
-import { Row, scanRows } from "./row"
+import { scanSegments, Segment } from "./segment"
 
 export type Line = {
   size: number
@@ -11,7 +11,7 @@ export type WrappedLine = {
   unwrap: () => Line
   put: (player: Player, i: number) => WrappedLine
   stones: () => (Player | undefined)[]
-  rows: (player: Player, kind: RowKind) => Row[]
+  rows: (player: Player, kind: RowKind) => Segment[]
   eq: (other: Line) => boolean
   toString: () => string
 }
@@ -83,13 +83,13 @@ const stones = (self: Line) => (): (Player | undefined)[] => {
 
 const rows =
   (self: Line) =>
-  (player: Player, kind: RowKind): Row[] => {
+  (player: Player, kind: RowKind): Segment[] => {
     if (!mayContain(self, player, kind)) return []
     const offset = 1
     const stones_ = (isBlack(player) ? self.blacks : self.whites) << 1
     const blanks_ = blanks(self) << 1
     const limit = self.size + offset * 2
-    return scanRows(player, kind, stones_, blanks_, limit, 1)
+    return scanSegments(player, kind, stones_, blanks_, limit, 1)
   }
 
 const eq = (self: Line) => (other: Line) =>

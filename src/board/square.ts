@@ -1,7 +1,7 @@
 import { BOARD_SIZE, Player, RowKind } from "./fundamentals"
 import { createLine, Line, parseLine, wrapLine, WrappedLine } from "./line"
 import { Direction, parsePoints, Point, Points, wrapIndex, wrapPoint } from "./point"
-import { Row } from "./row"
+import { Segment } from "./segment"
 
 export type Square = {
   vlines: OrthogonalLines
@@ -292,7 +292,7 @@ const eyes = (self: RowSegment) => (): Point[] => {
   }
 }
 
-const fromRow = (r: Row, d: Direction, i: number): RowSegment => ({
+const fromRow = (r: Segment, d: Direction, i: number): RowSegment => ({
   direction: d,
   start: wrapIndex([i, r.start]).toPoint(d).unwrap(),
   end: wrapIndex([i, r.end]).toPoint(d).unwrap(),

@@ -1,6 +1,6 @@
 import { BOARD_SIZE, Player, RowKind } from "./fundamentals"
 import { createLine, parseLine, WrappedLine } from "./line"
-import { Row } from "./row"
+import { Segment } from "./segment"
 
 test("createLine", () => {
   let result: WrappedLine
@@ -35,8 +35,8 @@ test("stones", () => {
 test("rows", () => {
   const line = parseLine("-oooo---x--x---")!
 
-  let result: Row[]
-  let expected: Row[]
+  let result: Segment[]
+  let expected: Segment[]
 
   result = line.rows(Player.black, RowKind.four)
   expected = [
