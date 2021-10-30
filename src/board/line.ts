@@ -11,7 +11,7 @@ export type WrappedLine = {
   unwrap: () => Line
   put: (player: Player, i: number) => WrappedLine
   stones: () => (Player | undefined)[]
-  rows: (player: Player, kind: RowKind) => Segment[]
+  segments: (player: Player, kind: RowKind) => Segment[]
   eq: (other: Line) => boolean
   toString: () => string
 }
@@ -43,7 +43,7 @@ export const wrapLine = (self: Line): WrappedLine => ({
   unwrap: () => self,
   put: put(self),
   stones: stones(self),
-  rows: rows(self),
+  segments: segments(self),
   eq: eq(self),
   toString: toString(self),
 })
@@ -81,7 +81,7 @@ const stones = (self: Line) => (): (Player | undefined)[] => {
   })
 }
 
-const rows =
+const segments =
   (self: Line) =>
   (player: Player, kind: RowKind): Segment[] => {
     if (!mayContain(self, player, kind)) return []

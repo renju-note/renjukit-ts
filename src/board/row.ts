@@ -23,13 +23,14 @@ export const wrapRow = (self: Row): WrappedRow => ({
   eyes: eyes(self),
 })
 
-export const fromSegment = (r: Segment, d: Direction, i: number): Row => ({
-  direction: d,
-  start: wrapIndex([i, r.start]).toPoint(d).unwrap(),
-  end: wrapIndex([i, r.end]).toPoint(d).unwrap(),
-  eye1: r.eye1 !== undefined ? wrapIndex([i, r.eye1]).toPoint(d).unwrap() : undefined,
-  eye2: r.eye2 !== undefined ? wrapIndex([i, r.eye2]).toPoint(d).unwrap() : undefined,
-})
+export const makeRow = (r: Segment, d: Direction, i: number): WrappedRow =>
+  wrapRow({
+    direction: d,
+    start: wrapIndex([i, r.start]).toPoint(d).unwrap(),
+    end: wrapIndex([i, r.end]).toPoint(d).unwrap(),
+    eye1: r.eye1 !== undefined ? wrapIndex([i, r.eye1]).toPoint(d).unwrap() : undefined,
+    eye2: r.eye2 !== undefined ? wrapIndex([i, r.eye2]).toPoint(d).unwrap() : undefined,
+  })
 
 const overlap =
   (self: Row) =>

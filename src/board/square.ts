@@ -1,7 +1,7 @@
 import { BOARD_SIZE, Player, RowKind } from "./fundamentals"
 import { createLine, Line, parseLine, wrapLine, WrappedLine } from "./line"
 import { Direction, parsePoints, Point, Points, wrapPoint } from "./point"
-import { fromSegment, Row, wrapRow } from "./row"
+import { makeRow, Row } from "./row"
 
 export type Square = {
   vlines: OrthogonalLines
@@ -25,6 +25,33 @@ export const createSquare = (): WrappedSquare =>
     alines: diagonalLines(),
     dlines: diagonalLines(),
   })
+
+export const makeSquare = (blacks: Points, whites: Points): WrappedSquare => {
+  let square = createSquare()
+  for (const p of blacks) {
+    square = square.put(Player.black, p)
+  }
+  for (const p of whites) {
+    square = square.put(Player.white, p)
+  }
+  return square
+}
+
+export const parseSquare = (s: string): WrappedSquare | undefined => {
+  if (s.includes("/")) {
+    return fromStringPoints(s)
+  } else {
+    return fromStringDisplay(s)
+  }
+}
+
+export const wrapSquare = (self: Square): WrappedSquare => ({
+  unwrap: () => self,
+  put: put(self),
+  rows: rows(self),
+  rowsOn: rowsOn(self),
+  toString: toString(self),
+})
 
 type OrthogonalLines = Line[]
 type DiagonalLines = Line[]
@@ -73,25 +100,6 @@ const diagonalLines = (): DiagonalLines => [
   createLine(BOARD_SIZE - 10).unwrap(),
 ]
 
-export const makeSquare = (blacks: Points, whites: Points): WrappedSquare => {
-  let square = createSquare()
-  for (const p of blacks) {
-    square = square.put(Player.black, p)
-  }
-  for (const p of whites) {
-    square = square.put(Player.white, p)
-  }
-  return square
-}
-
-export const parseSquare = (s: string): WrappedSquare | undefined => {
-  if (s.includes("/")) {
-    return fromStringPoints(s)
-  } else {
-    return fromStringDisplay(s)
-  }
-}
-
 const fromStringPoints = (s: string): WrappedSquare | undefined => {
   const codes = s.trim().split("/")
   if (codes.length !== 2) return undefined
@@ -121,14 +129,6 @@ const fromStringDisplay = (s: string): WrappedSquare | undefined => {
   }
   return square
 }
-
-export const wrapSquare = (self: Square): WrappedSquare => ({
-  unwrap: () => self,
-  put: put(self),
-  rows: rows(self),
-  rowsOn: rowsOn(self),
-  toString: toString(self),
-})
 
 const put =
   (self: Square) =>
@@ -168,8 +168,8 @@ const rows =
     lines(self)
       .map(([d, i, l]) =>
         wrapLine(l)
-          .rows(player, kind)
-          .map(r => fromSegment(r, d, i))
+          .segments(player, kind)
+          .map(s => makeRow(s, d, i).unwrap())
       )
       .flat(1)
 
@@ -179,9 +179,10 @@ const rowsOn =
     linesAlong(self, p)
       .map(([d, i, l]) =>
         wrapLine(l)
-          .rows(player, kind)
-          .map(r => fromSegment(r, d, i))
-          .filter(r => wrapRow(r).overlap(p))
+          .segments(player, kind)
+          .map(s => makeRow(s, d, i))
+          .filter(r => r.overlap(p))
+          .map(r => r.unwrap())
       )
       .flat(1)
 

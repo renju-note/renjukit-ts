@@ -38,14 +38,14 @@ test("rows", () => {
   let result: Segment[]
   let expected: Segment[]
 
-  result = line.rows(Player.black, RowKind.four)
+  result = line.segments(Player.black, RowKind.four)
   expected = [
     { start: 0, end: 4, eye1: 0, eye2: undefined },
     { start: 1, end: 5, eye1: 5, eye2: undefined },
   ]
   expect(result).toEqual(expected)
 
-  result = line.rows(Player.white, RowKind.two)
+  result = line.segments(Player.white, RowKind.two)
   expected = [{ start: 7, end: 12, eye1: 9, eye2: 10 }]
   expect(result).toEqual(expected)
 })
