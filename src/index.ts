@@ -5,6 +5,7 @@ export {
   Direction,
   ForbiddenKind,
   makeBoard,
+  parseBoard,
   Player,
   Point,
   Points,
