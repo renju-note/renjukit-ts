@@ -1,7 +1,7 @@
 import { Player, RowKind } from "./fundamentals"
 import { wrapLine } from "./line"
 import { Direction } from "./point"
-import { createSquare, parseSquare, RowSegment, WrappedSquare, wrapRowSegment } from "./square"
+import { createSquare, parseSquare, Row, WrappedSquare, wrapRow } from "./square"
 
 test("put", () => {
   let square = createSquare()
@@ -138,7 +138,7 @@ test("rows,rowsOn", () => {
     ---------------
     ---------------
   `)!
-  const blackTwos: RowSegment[] = [
+  const blackTwos: Row[] = [
     {
       direction: Direction.ascending,
       start: [6, 4],
@@ -147,7 +147,7 @@ test("rows,rowsOn", () => {
       eye2: [9, 7],
     },
   ]
-  const whiteSwords: RowSegment[] = [
+  const whiteSwords: Row[] = [
     {
       direction: Direction.horizontal,
       start: [5, 8],
@@ -230,7 +230,7 @@ test("toString", () => {
 })
 
 test("adjacent", () => {
-  let a: RowSegment, b: RowSegment
+  let a: Row, b: Row
   a = {
     direction: Direction.vertical,
     start: [3, 3],
@@ -245,7 +245,7 @@ test("adjacent", () => {
     eye1: undefined,
     eye2: undefined,
   }
-  expect(wrapRowSegment(a).adjacent(b)).toBe(false)
+  expect(wrapRow(a).adjacent(b)).toBe(false)
   a = {
     direction: Direction.vertical,
     start: [3, 3],
@@ -260,7 +260,7 @@ test("adjacent", () => {
     eye1: undefined,
     eye2: undefined,
   }
-  expect(wrapRowSegment(a).adjacent(b)).toBe(true)
+  expect(wrapRow(a).adjacent(b)).toBe(true)
   a = {
     direction: Direction.vertical,
     start: [3, 3],
@@ -275,7 +275,7 @@ test("adjacent", () => {
     eye1: undefined,
     eye2: undefined,
   }
-  expect(wrapRowSegment(a).adjacent(b)).toBe(false)
+  expect(wrapRow(a).adjacent(b)).toBe(false)
   a = {
     direction: Direction.descending,
     start: [3, 9],
@@ -290,7 +290,7 @@ test("adjacent", () => {
     eye1: undefined,
     eye2: undefined,
   }
-  expect(wrapRowSegment(a).adjacent(b)).toBe(true)
+  expect(wrapRow(a).adjacent(b)).toBe(true)
 })
 
 const trimLinesString = (s: string): string =>

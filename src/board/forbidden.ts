@@ -1,6 +1,6 @@
 import { BOARD_SIZE, Player, RowKind } from "./fundamentals"
 import { Point } from "./point"
-import { RowSegment, WrappedSquare, wrapRowSegment } from "./square"
+import { Row, WrappedSquare, wrapRow } from "./square"
 
 export const forbiddenKinds = ["doubleThree", "doubleFour", "overline"] as const
 export type ForbiddenKind = typeof forbiddenKinds[number]
@@ -55,8 +55,8 @@ const doubleThree = (next: WrappedSquare, p: Point): boolean => {
   return distinctive(truthyThrees)
 }
 
-const distinctive = (rows: RowSegment[]): boolean => {
-  const first = wrapRowSegment(rows[0])
+const distinctive = (rows: Row[]): boolean => {
+  const first = wrapRow(rows[0])
   for (const row of rows.slice(1)) {
     if (!first.adjacent(row)) return true
   }

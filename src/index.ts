@@ -8,8 +8,8 @@ export {
   Player,
   Point,
   Points,
+  Row,
   RowKind,
-  RowSegment,
   wrapBoard,
   WrappedBoard,
 } from "./board"

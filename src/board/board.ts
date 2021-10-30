@@ -5,7 +5,7 @@ import {
 } from "./forbidden"
 import { Player, RowKind } from "./fundamentals"
 import { Point, Points } from "./point"
-import { createSquare, makeSquare, parseSquare, RowSegment, Square, wrapSquare } from "./square"
+import { createSquare, makeSquare, parseSquare, Row, Square, wrapSquare } from "./square"
 
 export type Board = {
   square: Square
@@ -14,8 +14,8 @@ export type Board = {
 export type WrappedBoard = {
   unwrap: () => Board
   put: (player: Player, p: Point) => WrappedBoard
-  rows: (player: Player, kind: RowKind) => RowSegment[]
-  rowsOn: (player: Player, kind: RowKind, p: Point) => RowSegment[]
+  rows: (player: Player, kind: RowKind) => Row[]
+  rowsOn: (player: Player, kind: RowKind, p: Point) => Row[]
   forbiddens: () => [ForbiddenKind, Point][]
   forbidden: (p: Point) => ForbiddenKind | undefined
   toString: () => string
@@ -59,12 +59,12 @@ const put =
 
 const rows =
   (self: Board) =>
-  (player: Player, kind: RowKind): RowSegment[] =>
+  (player: Player, kind: RowKind): Row[] =>
     wrapSquare(self.square).rows(player, kind)
 
 const rowsOn =
   (self: Board) =>
-  (player: Player, kind: RowKind, p: Point): RowSegment[] =>
+  (player: Player, kind: RowKind, p: Point): Row[] =>
     wrapSquare(self.square).rowsOn(player, kind, p)
 
 const toString = (self: Board) => (): string => wrapSquare(self.square).toString()

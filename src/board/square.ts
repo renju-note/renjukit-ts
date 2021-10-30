@@ -13,8 +13,8 @@ export type Square = {
 export type WrappedSquare = {
   unwrap: () => Square
   put: (player: Player, p: Point) => WrappedSquare
-  rows: (player: Player, kind: RowKind) => RowSegment[]
-  rowsOn: (player: Player, kind: RowKind, p: Point) => RowSegment[]
+  rows: (player: Player, kind: RowKind) => Row[]
+  rowsOn: (player: Player, kind: RowKind, p: Point) => Row[]
   toString: () => string
 }
 
@@ -164,7 +164,7 @@ const put =
 
 const rows =
   (self: Square) =>
-  (player: Player, kind: RowKind): RowSegment[] =>
+  (player: Player, kind: RowKind): Row[] =>
     lines(self)
       .map(([d, i, l]) =>
         wrapLine(l)
@@ -175,13 +175,13 @@ const rows =
 
 const rowsOn =
   (self: Square) =>
-  (player: Player, kind: RowKind, p: Point): RowSegment[] =>
+  (player: Player, kind: RowKind, p: Point): Row[] =>
     linesAlong(self, p)
       .map(([d, i, l]) =>
         wrapLine(l)
           .rows(player, kind)
           .map(r => fromRow(r, d, i))
-          .filter(r => wrapRowSegment(r).overlap(p))
+          .filter(r => wrapRow(r).overlap(p))
       )
       .flat(1)
 
@@ -219,7 +219,7 @@ const linesAlong = (self: Square, p: Point): IndexedLine[] => {
   return [...vlines, ...hlines, ...alines, ...dlines]
 }
 
-export type RowSegment = {
+export type Row = {
   direction: Direction
   start: Point
   end: Point
@@ -227,14 +227,14 @@ export type RowSegment = {
   eye2: Point | undefined
 }
 
-export type WrappedRowSegment = {
-  unwrap: () => RowSegment
+export type WrappedRow = {
+  unwrap: () => Row
   overlap: (p: Point) => boolean
-  adjacent: (other: RowSegment) => boolean
+  adjacent: (other: Row) => boolean
   eyes: () => Point[]
 }
 
-export const wrapRowSegment = (self: RowSegment): WrappedRowSegment => ({
+export const wrapRow = (self: Row): WrappedRow => ({
   unwrap: () => self,
   overlap: overlap(self),
   adjacent: adjacent(self),
@@ -242,7 +242,7 @@ export const wrapRowSegment = (self: RowSegment): WrappedRowSegment => ({
 })
 
 const overlap =
-  (self: RowSegment) =>
+  (self: Row) =>
   (p: Point): boolean => {
     const [px, py] = p
     const [sx, sy] = self.start
@@ -262,8 +262,8 @@ const overlap =
   }
 
 const adjacent =
-  (self: RowSegment) =>
-  (other: RowSegment): boolean => {
+  (self: Row) =>
+  (other: Row): boolean => {
     if (self.direction !== other.direction) return false
     const [sx, sy] = self.start
     const [ox, oy] = other.start
@@ -282,7 +282,7 @@ const adjacent =
     }
   }
 
-const eyes = (self: RowSegment) => (): Point[] => {
+const eyes = (self: Row) => (): Point[] => {
   if (self.eye1 === undefined) {
     return []
   } else if (self.eye2 === undefined) {
@@ -292,7 +292,7 @@ const eyes = (self: RowSegment) => (): Point[] => {
   }
 }
 
-const fromRow = (r: Segment, d: Direction, i: number): RowSegment => ({
+const fromRow = (r: Segment, d: Direction, i: number): Row => ({
   direction: d,
   start: wrapIndex([i, r.start]).toPoint(d).unwrap(),
   end: wrapIndex([i, r.end]).toPoint(d).unwrap(),
