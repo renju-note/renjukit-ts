@@ -1,11 +1,11 @@
-import { createBoard } from "./board"
+import { createBoard, wrapBoard } from "./board"
 import { ForbiddenKind } from "./forbidden"
 import { Player, RowKind } from "./fundamentals"
 import { Direction } from "./point"
 import { Row } from "./row"
 
 test("put,rows,rowsOn,forbiddens,forbidden,toString", () => {
-  let board = createBoard()
+  let board = wrapBoard(createBoard())
   board = board.put(Player.black, [7, 7])
   board = board.put(Player.white, [7, 8])
   board = board.put(Player.black, [9, 9])

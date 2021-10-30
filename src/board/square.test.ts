@@ -2,10 +2,10 @@ import { Player, RowKind } from "./fundamentals"
 import { wrapLine } from "./line"
 import { Direction } from "./point"
 import { Row } from "./row"
-import { createSquare, parseSquare, WrappedSquare } from "./square"
+import { createSquare, parseSquare, Square, WrappedSquare, wrapSquare } from "./square"
 
 test("put", () => {
-  let square = createSquare()
+  let square = wrapSquare(createSquare())
   square = square.put(Player.black, [7, 7])
   square = square.put(Player.white, [8, 8])
   square = square.put(Player.black, [9, 8])
@@ -122,7 +122,8 @@ test("put", () => {
 })
 
 test("rows,rowsOn", () => {
-  const square = parseSquare(`
+  const square = wrapSquare(
+    parseSquare(`
     ---------------
     ---------------
     ---------------
@@ -139,6 +140,7 @@ test("rows,rowsOn", () => {
     ---------------
     ---------------
   `)!
+  )
   const blackTwos: Row[] = [
     {
       direction: Direction.ascending,
@@ -164,14 +166,14 @@ test("rows,rowsOn", () => {
 })
 
 test("parseSquare", () => {
-  let result: WrappedSquare, expected: WrappedSquare
+  let result: Square, expected: WrappedSquare
 
   result = parseSquare("H8,J9/I9")!
-  expected = createSquare()
+  expected = wrapSquare(createSquare())
   expected = expected.put(Player.black, [7, 7])
   expected = expected.put(Player.white, [8, 8])
   expected = expected.put(Player.black, [9, 8])
-  expect(result.unwrap()).toEqual(expected.unwrap())
+  expect(result).toEqual(expected.unwrap())
 
   result = parseSquare(`
       x-------------x
@@ -190,7 +192,7 @@ test("parseSquare", () => {
       ---------------
       o-------------o
   `)!
-  expected = createSquare()
+  expected = wrapSquare(createSquare())
   expected = expected.put(Player.black, [7, 7])
   expected = expected.put(Player.white, [8, 8])
   expected = expected.put(Player.black, [9, 8])
@@ -198,11 +200,11 @@ test("parseSquare", () => {
   expected = expected.put(Player.white, [0, 14])
   expected = expected.put(Player.black, [14, 0])
   expected = expected.put(Player.white, [14, 14])
-  expect(result.unwrap()).toEqual(expected.unwrap())
+  expect(result).toEqual(expected.unwrap())
 })
 
 test("toString", () => {
-  let square = createSquare()
+  let square = wrapSquare(createSquare())
   square = square.put(Player.black, [7, 7])
   square = square.put(Player.white, [8, 8])
   square = square.put(Player.black, [9, 8])

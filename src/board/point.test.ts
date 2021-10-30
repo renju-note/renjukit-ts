@@ -2,87 +2,59 @@ import {
   decodePoint,
   decodePoints,
   Direction,
+  Index,
   parsePoint,
   parsePoints,
   Point,
   Points,
   wrapIndex,
-  WrappedIndex,
-  WrappedPoint,
   wrapPoint,
   wrapPoints,
 } from "./point"
 
 test("toPoint,toIndex", () => {
-  const allEqual = (
-    p: WrappedPoint,
-    iv: WrappedIndex,
-    ih: WrappedIndex,
-    ia: WrappedIndex,
-    id: WrappedIndex
-  ) => {
-    expect(p.toIndex(Direction.vertical).unwrap()).toEqual(iv.unwrap())
-    expect(p.toIndex(Direction.horizontal).unwrap()).toEqual(ih.unwrap())
-    expect(p.toIndex(Direction.ascending).unwrap()).toEqual(ia.unwrap())
-    expect(p.toIndex(Direction.descending).unwrap()).toEqual(id.unwrap())
-    expect(iv.toPoint(Direction.vertical).unwrap()).toEqual(p.unwrap())
-    expect(ih.toPoint(Direction.horizontal).unwrap()).toEqual(p.unwrap())
-    expect(ia.toPoint(Direction.ascending).unwrap()).toEqual(p.unwrap())
-    expect(id.toPoint(Direction.descending).unwrap()).toEqual(p.unwrap())
+  const allEqual = (p: Point, iv: Index, ih: Index, ia: Index, id: Index) => {
+    const wp = wrapPoint(p)
+    expect(wp.toIndex(Direction.vertical)).toEqual(iv)
+    expect(wp.toIndex(Direction.horizontal)).toEqual(ih)
+    expect(wp.toIndex(Direction.ascending)).toEqual(ia)
+    expect(wp.toIndex(Direction.descending)).toEqual(id)
+    expect(wrapIndex(iv).toPoint(Direction.vertical)).toEqual(p)
+    expect(wrapIndex(ih).toPoint(Direction.horizontal)).toEqual(p)
+    expect(wrapIndex(ia).toPoint(Direction.ascending)).toEqual(p)
+    expect(wrapIndex(id).toPoint(Direction.descending)).toEqual(p)
   }
 
-  let p: WrappedPoint, iv: WrappedIndex, ih: WrappedIndex, ia: WrappedIndex, id: WrappedIndex
-
   // lower-left quadrant
-  p = wrapPoint([3, 6])
-  iv = wrapIndex([3, 6])
-  ih = wrapIndex([6, 3])
-  ia = wrapIndex([11, 3])
-  id = wrapIndex([9, 3])
-  allEqual(p, iv, ih, ia, id)
+  allEqual([3, 6], [3, 6], [6, 3], [11, 3], [9, 3])
 
   // lower-right quadrant
-  p = wrapPoint([9, 6])
-  iv = wrapIndex([9, 6])
-  ih = wrapIndex([6, 9])
-  ia = wrapIndex([17, 6])
-  id = wrapIndex([15, 8])
-  allEqual(p, iv, ih, ia, id)
+  allEqual([9, 6], [9, 6], [6, 9], [17, 6], [15, 8])
 
   // upper-left quadrant
-  p = wrapPoint([3, 12])
-  iv = wrapIndex([3, 12])
-  ih = wrapIndex([12, 3])
-  ia = wrapIndex([5, 3])
-  id = wrapIndex([15, 2])
-  allEqual(p, iv, ih, ia, id)
+  allEqual([3, 12], [3, 12], [12, 3], [5, 3], [15, 2])
 
   // upper-right quadrant
-  p = wrapPoint([9, 12])
-  iv = wrapIndex([9, 12])
-  ih = wrapIndex([12, 9])
-  ia = wrapIndex([11, 9])
-  id = wrapIndex([21, 2])
-  allEqual(p, iv, ih, ia, id)
+  allEqual([9, 12], [9, 12], [12, 9], [11, 9], [21, 2])
 })
 
 test("toString,parsePoint", () => {
   const p1: Point = [4, 1]
   const s1 = "E2"
   expect(wrapPoint(p1).toString()).toBe(s1)
-  expect(parsePoint(s1)!.unwrap()).toEqual(p1)
+  expect(parsePoint(s1)!).toEqual(p1)
 
   const p2: Point = [12, 14]
   const s2 = "M15"
   expect(wrapPoint(p2).toString()).toBe(s2)
-  expect(parsePoint(s2)!.unwrap()).toEqual(p2)
+  expect(parsePoint(s2)!).toEqual(p2)
 })
 
 test("encode,decodePoint", () => {
   const p: Point = [4, 12]
   const c = 72
   expect(wrapPoint(p).encode()).toBe(c)
-  expect(decodePoint(c)!.unwrap()).toEqual(p)
+  expect(decodePoint(c)!).toEqual(p)
 })
 
 test("toStringPoints,parsePoints", () => {
@@ -93,7 +65,7 @@ test("toStringPoints,parsePoints", () => {
   ]
   const s = "H8,H9,I9"
   expect(wrapPoints(ps).toString()).toBe(s)
-  expect(parsePoints(s)!.unwrap()).toEqual(ps)
+  expect(parsePoints(s)!).toEqual(ps)
 })
 
 test("encodePoints,decodePoints", () => {
@@ -104,5 +76,5 @@ test("encodePoints,decodePoints", () => {
   ]
   const cs = new Uint8Array([112, 113, 128])
   expect(wrapPoints(ps).encode()).toEqual(cs)
-  expect(decodePoints(cs)!.unwrap()).toEqual(ps)
+  expect(decodePoints(cs)!).toEqual(ps)
 })

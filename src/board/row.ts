@@ -9,6 +9,14 @@ export type Row = {
   eye2: Point | undefined
 }
 
+export const makeRow = (r: Segment, d: Direction, i: number): Row => ({
+  direction: d,
+  start: wrapIndex([i, r.start]).toPoint(d),
+  end: wrapIndex([i, r.end]).toPoint(d),
+  eye1: r.eye1 !== undefined ? wrapIndex([i, r.eye1]).toPoint(d) : undefined,
+  eye2: r.eye2 !== undefined ? wrapIndex([i, r.eye2]).toPoint(d) : undefined,
+})
+
 export type WrappedRow = {
   unwrap: () => Row
   overlap: (p: Point) => boolean
@@ -22,15 +30,6 @@ export const wrapRow = (self: Row): WrappedRow => ({
   adjacent: adjacent(self),
   eyes: eyes(self),
 })
-
-export const makeRow = (r: Segment, d: Direction, i: number): WrappedRow =>
-  wrapRow({
-    direction: d,
-    start: wrapIndex([i, r.start]).toPoint(d).unwrap(),
-    end: wrapIndex([i, r.end]).toPoint(d).unwrap(),
-    eye1: r.eye1 !== undefined ? wrapIndex([i, r.eye1]).toPoint(d).unwrap() : undefined,
-    eye2: r.eye2 !== undefined ? wrapIndex([i, r.eye2]).toPoint(d).unwrap() : undefined,
-  })
 
 const overlap =
   (self: Row) =>

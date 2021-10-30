@@ -7,27 +7,17 @@ export type Line = {
   whites: Bits
 }
 
-export type WrappedLine = {
-  unwrap: () => Line
-  put: (player: Player, i: number) => WrappedLine
-  stones: () => (Player | undefined)[]
-  segments: (player: Player, kind: RowKind) => Segment[]
-  eq: (other: Line) => boolean
-  toString: () => string
-}
+export const createLine = (size: number): Line => ({
+  size: Math.min(size, BOARD_SIZE),
+  blacks: 0b0,
+  whites: 0b0,
+})
 
-export const createLine = (size: number): WrappedLine =>
-  wrapLine({
-    size: Math.min(size, BOARD_SIZE),
-    blacks: 0b0,
-    whites: 0b0,
-  })
-
-export const parseLine = (s: string): WrappedLine | undefined => {
+export const parseLine = (s: string): Line | undefined => {
   const chars = s.split("")
   const size = chars.length
   if (size > BOARD_SIZE) return undefined
-  let result = createLine(size)
+  let result = wrapLine(createLine(size))
   for (let i = 0; i < size; i++) {
     const c = chars[i]
     if (c === "o") {
@@ -36,7 +26,16 @@ export const parseLine = (s: string): WrappedLine | undefined => {
       result = result.put(Player.white, i)
     }
   }
-  return result
+  return result.unwrap()
+}
+
+export type WrappedLine = {
+  unwrap: () => Line
+  put: (player: Player, i: number) => WrappedLine
+  stones: () => (Player | undefined)[]
+  segments: (player: Player, kind: RowKind) => Segment[]
+  eq: (other: Line) => boolean
+  toString: () => string
 }
 
 export const wrapLine = (self: Line): WrappedLine => ({

@@ -11,16 +11,9 @@ export const Direction: Record<Direction, Direction> = {
 
 export type Point = [number, number]
 
-export type WrappedPoint = {
-  unwrap: () => Point
-  toIndex: (direction: Direction) => WrappedIndex
-  toString: () => string
-  encode: () => number
-}
+export const createPoint = (x: number, y: number): Point => [x, y]
 
-export const createPoint = (x: number, y: number): WrappedPoint => wrapPoint([x, y])
-
-export const parsePoint = (s: string): WrappedPoint | undefined => {
+export const parsePoint = (s: string): Point | undefined => {
   const x = X_CODE_TO_NUM[s[0]]
   const y = parseInt(s.slice(1)) - 1
   if (
@@ -34,17 +27,24 @@ export const parsePoint = (s: string): WrappedPoint | undefined => {
   ) {
     return undefined
   }
-  return wrapPoint([x, y])
+  return [x, y]
 }
 
-export const decodePoint = (c: number): WrappedPoint | undefined => {
+export const decodePoint = (c: number): Point | undefined => {
   const x = ~~(c / BOARD_SIZE)
   const y = c % BOARD_SIZE
   if (0 <= x && x < BOARD_SIZE && 0 <= y && y < BOARD_SIZE) {
-    return wrapPoint([x, y])
+    return [x, y]
   } else {
     return undefined
   }
+}
+
+export type WrappedPoint = {
+  unwrap: () => Point
+  toIndex: (direction: Direction) => Index
+  toString: () => string
+  encode: () => number
 }
 
 export const wrapPoint = (self: Point): WrappedPoint => ({
@@ -56,26 +56,31 @@ export const wrapPoint = (self: Point): WrappedPoint => ({
 
 const toIndex =
   ([x, y]: Point) =>
-  (direction: Direction): WrappedIndex => {
+  (direction: Direction): Index => {
     const n = BOARD_SIZE - 1
     let i: number, j: number
     switch (direction) {
       case Direction.vertical:
-        return wrapIndex([x, y])
+        return [x, y]
       case Direction.horizontal:
-        return wrapIndex([y, x])
+        return [y, x]
       case Direction.ascending:
         i = x + n - y
         j = i < n ? x : y
-        return wrapIndex([i, j])
+        return [i, j]
       case Direction.descending:
         i = x + y
         j = i < n ? x : n - y
-        return wrapIndex([i, j])
+        return [i, j]
       default:
-        return wrapIndex([x, y])
+        return [x, y]
     }
   }
+
+const encode =
+  ([x, y]: Point) =>
+  (): number =>
+    x * BOARD_SIZE + y
 
 const toString =
   ([x, y]: Point) =>
@@ -85,16 +90,11 @@ const toString =
     return `${sx}${sy}`
   }
 
-const encode =
-  ([x, y]: Point) =>
-  (): number =>
-    x * BOARD_SIZE + y
-
 export type Index = [number, number]
 
 export type WrappedIndex = {
   unwrap: () => Index
-  toPoint: (direction: Direction) => WrappedPoint
+  toPoint: (direction: Direction) => Point
 }
 
 export const wrapIndex = (self: Index): WrappedIndex => ({
@@ -104,45 +104,45 @@ export const wrapIndex = (self: Index): WrappedIndex => ({
 
 const toPoint =
   ([i, j]: Index) =>
-  (direction: Direction): WrappedPoint => {
+  (direction: Direction): Point => {
     const n = BOARD_SIZE - 1
     let x: number, y: number
     switch (direction) {
       case Direction.vertical:
-        return wrapPoint([i, j])
+        return [i, j]
       case Direction.horizontal:
-        return wrapPoint([j, i])
+        return [j, i]
       case Direction.ascending:
         x = i < n ? j : i + j - n
         y = i < n ? n - i + j : j
-        return wrapPoint([x, y])
+        return [x, y]
       case Direction.descending:
         x = i < n ? j : i + j - n
         y = i < n ? i - j : n - j
-        return wrapPoint([x, y])
+        return [x, y]
       default:
-        return wrapPoint([i, j])
+        return [i, j]
     }
   }
 
 export type Points = Point[]
 
+export const parsePoints = (s: string): Points | undefined => {
+  const ps = s.split(",").map(parsePoint)
+  if (ps.some(p => p === undefined)) return undefined
+  return ps.map(p => p!)
+}
+
+export const decodePoints = (cs: Uint8Array): Points | undefined => {
+  const ps = Array.from(cs).map(decodePoint)
+  if (ps.some(p => p === undefined)) return undefined
+  return ps.map(p => p!)
+}
+
 export type WrappedPoints = {
   unwrap: () => Points
   toString: () => string
   encode: () => Uint8Array
-}
-
-export const parsePoints = (s: string): WrappedPoints | undefined => {
-  const ps = s.split(",").map(parsePoint)
-  if (ps.some(p => p === undefined)) return undefined
-  return wrapPoints(ps.map(p => p!.unwrap()))
-}
-
-export const decodePoints = (cs: Uint8Array): WrappedPoints | undefined => {
-  const ps = Array.from(cs).map(decodePoint)
-  if (ps.some(p => p === undefined)) return undefined
-  return wrapPoints(ps.map(p => p!.unwrap()))
 }
 
 export const wrapPoints = (self: Points): WrappedPoints => ({

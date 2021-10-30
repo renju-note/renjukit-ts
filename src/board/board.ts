@@ -12,6 +12,23 @@ export type Board = {
   square: Square
 }
 
+export const createBoard = (): Board => ({
+  square: createSquare(),
+})
+
+export const makeBoard = (blacks: Points, whites: Points): Board => ({
+  square: makeSquare(blacks, whites),
+})
+
+export const parseBoard = (s: string): Board | undefined => {
+  const square = parseSquare(s)
+  if (square === undefined) {
+    return undefined
+  } else {
+    return { square }
+  }
+}
+
 export type WrappedBoard = {
   unwrap: () => Board
   put: (player: Player, p: Point) => WrappedBoard
@@ -20,25 +37,6 @@ export type WrappedBoard = {
   forbiddens: () => [ForbiddenKind, Point][]
   forbidden: (p: Point) => ForbiddenKind | undefined
   toString: () => string
-}
-
-export const createBoard = (): WrappedBoard =>
-  wrapBoard({
-    square: createSquare().unwrap(),
-  })
-
-export const makeBoard = (blacks: Points, whites: Points): WrappedBoard =>
-  wrapBoard({
-    square: makeSquare(blacks, whites).unwrap(),
-  })
-
-export const parseBoard = (s: string): WrappedBoard | undefined => {
-  const wsquare = parseSquare(s)
-  if (wsquare === undefined) {
-    return undefined
-  } else {
-    return wrapBoard({ square: wsquare.unwrap() })
-  }
 }
 
 export const wrapBoard = (self: Board): WrappedBoard => ({
@@ -68,12 +66,11 @@ const rowsOn =
   (player: Player, kind: RowKind, p: Point): Row[] =>
     wrapSquare(self.square).rowsOn(player, kind, p)
 
-const toString = (self: Board) => (): string => wrapSquare(self.square).toString()
-
-const forbiddens = (self: Board) => (): [ForbiddenKind, Point][] =>
-  forbiddensFunc(wrapSquare(self.square))
+const forbiddens = (self: Board) => (): [ForbiddenKind, Point][] => forbiddensFunc(self.square)
 
 const forbidden =
   (self: Board) =>
   (p: Point): ForbiddenKind | undefined =>
-    forbiddenFunc(wrapSquare(self.square), p)
+    forbiddenFunc(self.square, p)
+
+const toString = (self: Board) => (): string => wrapSquare(self.square).toString()
