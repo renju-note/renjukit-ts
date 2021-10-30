@@ -12,4 +12,4 @@ export {
   RowSegment,
   wrapBoard,
   WrappedBoard,
-} from "./bitboard"
+} from "./board"
