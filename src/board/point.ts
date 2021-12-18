@@ -11,6 +11,8 @@ export const Direction: Record<Direction, Direction> = {
 
 export type Point = [number, number]
 
+export const pointEqual = (a: Point, b: Point): boolean => a[0] === b[0] && a[1] === b[1]
+
 export const createPoint = (x: number, y: number): Point => [x, y]
 
 export const parsePoint = (s: string): Point | undefined => {
@@ -140,7 +142,7 @@ export const decodePoints = (cs: Uint8Array): Points | undefined => {
 
 export type WrappedPoints = {
   unwrap: () => Points
-  toString: () => string
+  toString: (sep?: string) => string
   encode: () => Uint8Array
 }
 
@@ -150,7 +152,10 @@ export const wrapPoints = (self: Points): WrappedPoints => ({
   encode: encodePoints(self),
 })
 
-const toStringPoints = (self: Points) => (): string => self.map(p => toString(p)()).join(",")
+const toStringPoints =
+  (self: Points) =>
+  (sep = ","): string =>
+    self.map(p => toString(p)()).join(sep)
 
 const encodePoints = (self: Points) => (): Uint8Array => new Uint8Array(self.map(p => encode(p)()))
 
