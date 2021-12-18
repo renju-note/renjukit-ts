@@ -39,6 +39,8 @@ export const parseSquare = (s: string): Square | undefined => {
 export type WrappedSquare = {
   unwrap: () => Square
   put: (player: Player, p: Point) => WrappedSquare
+  remove: (p: Point) => WrappedSquare
+  stones: (player: Player) => Point[]
   rows: (player: Player, kind: RowKind) => Row[]
   rowsOn: (player: Player, kind: RowKind, p: Point) => Row[]
   toString: () => string
@@ -47,6 +49,8 @@ export type WrappedSquare = {
 export const wrapSquare = (self: Square): WrappedSquare => ({
   unwrap: () => self,
   put: put(self),
+  remove: remove(self),
+  stones: stones(self),
   rows: rows(self),
   rowsOn: rowsOn(self),
   toString: toString(self),
@@ -161,6 +165,45 @@ const put =
       dlines: dlines,
     })
   }
+
+const remove =
+  (self: Square) =>
+  (p: Point): WrappedSquare => {
+    const wp = wrapPoint(p)
+    const vidx = wp.toIndex(Direction.vertical)
+    const vlines = self.vlines.map((l, i) =>
+      i === vidx[0] ? wrapLine(l).remove(vidx[1]).unwrap() : l
+    )
+    const hidx = wp.toIndex(Direction.horizontal)
+    const hlines = self.hlines.map((l, i) =>
+      i === hidx[0] ? wrapLine(l).remove(hidx[1]).unwrap() : l
+    )
+    const aidx = wp.toIndex(Direction.ascending)
+    const alines = bw(4, aidx[0], D_LINE_NUM + 3)
+      ? self.alines.map((l, i) => (i === aidx[0] - 4 ? wrapLine(l).remove(aidx[1]).unwrap() : l))
+      : self.alines
+    const didx = wp.toIndex(Direction.descending)
+    const dlines = bw(4, didx[0], D_LINE_NUM + 3)
+      ? self.dlines.map((l, i) => (i === didx[0] - 4 ? wrapLine(l).remove(didx[1]).unwrap() : l))
+      : self.dlines
+    return wrapSquare({
+      vlines: vlines,
+      hlines: hlines,
+      alines: alines,
+      dlines: dlines,
+    })
+  }
+
+const stones =
+  (self: Square) =>
+  (player: Player): Point[] =>
+    self.vlines.flatMap(
+      (l, i) =>
+        wrapLine(l)
+          .stones()
+          .map((s, j) => (s === player ? ([i, j] as Point) : undefined))
+          .filter(p => p !== undefined) as Point[]
+    )
 
 const rows =
   (self: Square) =>

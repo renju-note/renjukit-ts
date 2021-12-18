@@ -1,6 +1,6 @@
 import { Player, RowKind } from "./fundamentals"
 import { wrapLine } from "./line"
-import { Direction } from "./point"
+import { Direction, Point } from "./point"
 import { Row } from "./row"
 import { createSquare, parseSquare, Square, WrappedSquare, wrapSquare } from "./square"
 
@@ -119,6 +119,135 @@ test("put", () => {
     -----
   `)
   expect(result).toBe(expected)
+})
+
+test("remove", () => {
+  let square = wrapSquare(createSquare())
+  square = square.put(Player.black, [7, 7])
+  square = square.put(Player.white, [8, 8])
+  square = square.put(Player.black, [9, 8])
+  square = square.remove([8, 8])
+
+  let result: string, expected: string
+
+  result = square
+    .unwrap()
+    .hlines.map(l => wrapLine(l).toString())
+    .join("\n")
+  expected = trimLinesString(`
+    ---------------
+    ---------------
+    ---------------
+    ---------------
+    ---------------
+    ---------------
+    ---------------
+    -------o-------
+    ---------o-----
+    ---------------
+    ---------------
+    ---------------
+    ---------------
+    ---------------
+    ---------------
+  `)
+  expect(result).toBe(expected)
+
+  result = square
+    .unwrap()
+    .vlines.map(l => wrapLine(l).toString())
+    .join("\n")
+  expected = trimLinesString(`
+    ---------------
+    ---------------
+    ---------------
+    ---------------
+    ---------------
+    ---------------
+    ---------------
+    -------o-------
+    ---------------
+    --------o------
+    ---------------
+    ---------------
+    ---------------
+    ---------------
+    ---------------
+  `)
+  expect(result).toBe(expected)
+
+  result = square
+    .unwrap()
+    .alines.map(l => wrapLine(l).toString())
+    .join("\n")
+  expected = trimLinesString(`
+    -----
+    ------
+    -------
+    --------
+    ---------
+    ----------
+    -----------
+    ------------
+    -------------
+    --------------
+    -------o-------
+    --------o-----
+    -------------
+    ------------
+    -----------
+    ----------
+    ---------
+    --------
+    -------
+    ------
+    -----
+  `)
+  expect(result).toBe(expected)
+
+  result = square
+    .unwrap()
+    .dlines.map(l => wrapLine(l).toString())
+    .join("\n")
+  expected = trimLinesString(`
+    -----
+    ------
+    -------
+    --------
+    ---------
+    ----------
+    -----------
+    ------------
+    -------------
+    --------------
+    -------o-------
+    --------------
+    -------------
+    ------o-----
+    -----------
+    ----------
+    ---------
+    --------
+    -------
+    ------
+    -----
+  `)
+  expect(result).toBe(expected)
+})
+
+test("stones", () => {
+  let square = wrapSquare(createSquare())
+  square = square.put(Player.black, [7, 7])
+  square = square.put(Player.white, [8, 8])
+  square = square.put(Player.black, [9, 8])
+
+  const blacks: Point[] = [
+    [7, 7],
+    [9, 8],
+  ]
+  const whites: Point[] = [[8, 8]]
+  expect(square.stones(Player.black)).toEqual(blacks)
+  expect(square.stones(Player.white)).toEqual(whites)
 })
 
 test("rows,rowsOn", () => {

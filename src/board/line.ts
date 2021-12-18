@@ -32,6 +32,7 @@ export const parseLine = (s: string): Line | undefined => {
 export type WrappedLine = {
   unwrap: () => Line
   put: (player: Player, i: number) => WrappedLine
+  remove: (i: number) => WrappedLine
   stones: () => (Player | undefined)[]
   sequences: (player: Player, kind: RowKind) => Sequence[]
   eq: (other: Line) => boolean
@@ -41,6 +42,7 @@ export type WrappedLine = {
 export const wrapLine = (self: Line): WrappedLine => ({
   unwrap: () => self,
   put: put(self),
+  remove: remove(self),
   stones: stones(self),
   sequences: sequences(self),
   eq: eq(self),
@@ -60,6 +62,19 @@ const put =
       blacks &= ~stones
       whites |= stones
     }
+    return wrapLine({
+      ...self,
+      blacks,
+      whites,
+    })
+  }
+
+const remove =
+  (self: Line) =>
+  (i: number): WrappedLine => {
+    const stones = 0b1 << i
+    const blacks = self.blacks & ~stones
+    const whites = self.whites & ~stones
     return wrapLine({
       ...self,
       blacks,
