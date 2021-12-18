@@ -1,16 +1,1 @@
-export {
-  Board,
-  BOARD_SIZE,
-  createBoard,
-  Direction,
-  ForbiddenKind,
-  makeBoard,
-  parseBoard,
-  Player,
-  Point,
-  Points,
-  Row,
-  RowKind,
-  wrapBoard,
-  WrappedBoard,
-} from "./board"
+export * from "./board"
