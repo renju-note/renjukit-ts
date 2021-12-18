@@ -273,8 +273,8 @@ test("rows,rowsOn", () => {
   const blackTwos: Row[] = [
     {
       direction: Direction.ascending,
-      start: [6, 4],
-      end: [11, 9],
+      start: [7, 5],
+      end: [10, 8],
       eye1: [8, 6],
       eye2: [9, 7],
     },
