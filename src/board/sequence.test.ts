@@ -27,7 +27,7 @@ test("matches", () => {
   expect(pattern.matches(0b0101001, 0b0010100)).toBe(false)
 })
 
-test("scanSegments", () => {
+test("scanSequences", () => {
   const stones = 0b0011100
   const blanks = 0b1100010
 
