@@ -168,7 +168,7 @@ const rows =
     lines(self)
       .map(([d, i, l]) =>
         wrapLine(l)
-          .segments(player, kind)
+          .sequences(player, kind)
           .map(s => makeRow(s, d, i))
       )
       .flat(1)
@@ -179,7 +179,7 @@ const rowsOn =
     linesAlong(self, p)
       .map(([d, i, l]) =>
         wrapLine(l)
-          .segments(player, kind)
+          .sequences(player, kind)
           .map(s => makeRow(s, d, i))
           .filter(r => wrapRow(r).overlap(p))
       )

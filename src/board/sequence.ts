@@ -1,20 +1,20 @@
 import { Bits, isBlack, Player, RowKind } from "./fundamentals"
 
-export type Segment = {
+export type Sequence = {
   start: number
   end: number
   eye1: number | undefined
   eye2: number | undefined
 }
 
-export const scanSegments = (
+export const scanSequences = (
   player: Player,
   kind: RowKind,
   stones: Bits,
   blanks: Bits,
   limit: number,
   offset: number
-): Segment[] => {
+): Sequence[] => {
   if (isBlack(player)) {
     switch (kind) {
       case RowKind.two:
@@ -56,8 +56,8 @@ const scan = (
   blanks: Bits,
   limit: number,
   offset: number
-): Segment[] => {
-  const result: Segment[] = []
+): Sequence[] => {
+  const result: Sequence[] = []
   const size = window.size
   if (limit < size) {
     return result

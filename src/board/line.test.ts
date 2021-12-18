@@ -1,6 +1,6 @@
 import { BOARD_SIZE, Player, RowKind } from "./fundamentals"
 import { createLine, Line, parseLine, wrapLine } from "./line"
-import { Segment } from "./segment"
+import { Sequence } from "./sequence"
 
 test("createLine", () => {
   let result: Line
@@ -35,17 +35,17 @@ test("stones", () => {
 test("rows", () => {
   const line = wrapLine(parseLine("-oooo---x--x---")!)
 
-  let result: Segment[]
-  let expected: Segment[]
+  let result: Sequence[]
+  let expected: Sequence[]
 
-  result = line.segments(Player.black, RowKind.four)
+  result = line.sequences(Player.black, RowKind.four)
   expected = [
     { start: 0, end: 4, eye1: 0, eye2: undefined },
     { start: 1, end: 5, eye1: 5, eye2: undefined },
   ]
   expect(result).toEqual(expected)
 
-  result = line.segments(Player.white, RowKind.two)
+  result = line.sequences(Player.white, RowKind.two)
   expected = [{ start: 7, end: 12, eye1: 9, eye2: 10 }]
   expect(result).toEqual(expected)
 })
