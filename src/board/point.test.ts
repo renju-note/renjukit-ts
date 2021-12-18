@@ -6,11 +6,18 @@ import {
   parsePoint,
   parsePoints,
   Point,
+  pointEqual,
   Points,
   wrapIndex,
   wrapPoint,
   wrapPoints,
 } from "./point"
+
+test("equalPoint", () => {
+  expect(pointEqual([1, 2], [1, 2])).toBe(true)
+  expect(pointEqual([1, 2], [1, 1])).toBe(false)
+  expect(pointEqual([1, 2], [2, 2])).toBe(false)
+})
 
 test("toPoint,toIndex", () => {
   const allEqual = (p: Point, iv: Index, ih: Index, ia: Index, id: Index) => {
@@ -66,6 +73,8 @@ test("toStringPoints,parsePoints", () => {
   const s = "H8,H9,I9"
   expect(wrapPoints(ps).toString()).toBe(s)
   expect(parsePoints(s)!).toEqual(ps)
+
+  expect(wrapPoints(ps).toString(" ")).toBe("H8 H9 I9")
 })
 
 test("encodePoints,decodePoints", () => {
