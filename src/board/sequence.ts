@@ -1,20 +1,20 @@
 import { Bits, isBlack, Player, RowKind } from "./fundamentals"
 
-export type Segment = {
+export type Sequence = {
   start: number
   end: number
   eye1: number | undefined
   eye2: number | undefined
 }
 
-export const scanSegments = (
+export const scanSequences = (
   player: Player,
   kind: RowKind,
   stones: Bits,
   blanks: Bits,
   limit: number,
   offset: number
-): Segment[] => {
+): Sequence[] => {
   if (isBlack(player)) {
     switch (kind) {
       case RowKind.two:
@@ -56,8 +56,8 @@ const scan = (
   blanks: Bits,
   limit: number,
   offset: number
-): Segment[] => {
-  const result: Segment[] = []
+): Sequence[] => {
+  const result: Sequence[] = []
   const size = window.size
   if (limit < size) {
     return result
@@ -70,13 +70,11 @@ const scan = (
     for (const p of patterns) {
       const p_ = wrapPattern(p)
       if (!p_.matches(stones_, blanks_)) continue
-      const eye1 = p_.eye1()
-      const eye2 = p_.eye2()
       result.push({
-        start: p_.start() + i - offset,
-        end: p_.end() + i - offset,
-        eye1: eye1 === undefined ? undefined : eye1 + i - offset,
-        eye2: eye2 === undefined ? undefined : eye2 + i - offset,
+        start: p.start + i - offset,
+        end: p.end + i - offset,
+        eye1: p.eye1 === undefined ? undefined : p.eye1 + i - offset,
+        eye2: p.eye2 === undefined ? undefined : p.eye2 + i - offset,
       })
     }
   }
@@ -108,25 +106,20 @@ export type Pattern = {
   filter: Bits
   stones: Bits
   blanks: Bits
-  eyes__: Bits
+  start: number
+  end: number
+  eye1: number | undefined
+  eye2: number | undefined
 }
 
 export type WrappedPattern = {
   unwrap: () => Pattern
   matches: (stones: Bits, blanks: Bits) => boolean
-  start: () => number
-  end: () => number
-  eye1: () => number | undefined
-  eye2: () => number | undefined
 }
 
 export const wrapPattern = (self: Pattern): WrappedPattern => ({
   unwrap: () => self,
   matches: matches(self),
-  start: start(self),
-  end: end(self),
-  eye1: eye1(self),
-  eye2: eye2(self),
 })
 
 const matches =
@@ -136,128 +129,6 @@ const matches =
       (stones & self.filter) === self.stones && (blanks & self.filter & self.blanks) === self.blanks
     )
   }
-
-const start = (self: Pattern) => (): number => {
-  switch ((self.stones | self.blanks) & 0b11) {
-    case 0b11:
-      return 0
-    case 0b10:
-      return 1
-    case 0b00:
-      return 2
-    default:
-      return 0
-  }
-}
-
-const end = (self: Pattern) => (): number => {
-  switch (self.stones | self.blanks) {
-    case 0b1111:
-      return 3
-    case 0b11110:
-      return 4
-    case 0b111100:
-      return 5
-    case 0b11111:
-      return 4
-    case 0b111110:
-      return 5
-    case 0b1111100:
-      return 6
-    case 0b111111:
-      return 5
-    case 0b1111110:
-      return 6
-    case 0b11111100:
-      return 7
-    default:
-      return 0
-  }
-}
-
-const eye1 = (self: Pattern) => (): number | undefined => {
-  switch (self.eyes__) {
-    case 0b1:
-      return 0
-    case 0b10:
-      return 1
-    case 0b100:
-      return 2
-    case 0b1000:
-      return 3
-    case 0b10000:
-      return 4
-    case 0b100000:
-      return 5
-    case 0b1000000:
-      return 6
-    case 0b11:
-      return 0
-    case 0b101:
-      return 0
-    case 0b110:
-      return 1
-    case 0b1001:
-      return 0
-    case 0b1010:
-      return 1
-    case 0b1100:
-      return 2
-    case 0b10001:
-      return 0
-    case 0b10010:
-      return 1
-    case 0b10100:
-      return 2
-    case 0b11000:
-      return 3
-    case 0b100010:
-      return 1
-    case 0b100100:
-      return 2
-    case 0b101000:
-      return 3
-    case 0b110000:
-      return 4
-    default:
-      return undefined
-  }
-}
-
-const eye2 = (self: Pattern) => (): number | undefined => {
-  switch (self.eyes__) {
-    case 0b11:
-      return 1
-    case 0b101:
-      return 2
-    case 0b110:
-      return 2
-    case 0b1001:
-      return 3
-    case 0b1010:
-      return 3
-    case 0b1100:
-      return 3
-    case 0b10001:
-      return 4
-    case 0b10010:
-      return 4
-    case 0b10100:
-      return 4
-    case 0b11000:
-      return 4
-    case 0b100010:
-      return 5
-    case 0b100100:
-      return 5
-    case 0b101000:
-      return 5
-    case 0b110000:
-      return 5
-    default:
-      return undefined
-  }
-}
 
 const B_TWO: Window = {
   size: 8,
@@ -269,37 +140,55 @@ const B_TWOS: Pattern[] = [
     filter: 0b11111111,
     stones: 0b00001100,
     blanks: 0b01110010,
-    eyes__: 0b00110000,
+    start: 1,
+    end: 6,
+    eye1: 4,
+    eye2: 5,
   },
   {
     filter: 0b11111111,
     stones: 0b00010100,
     blanks: 0b01101010,
-    eyes__: 0b00101000,
+    start: 1,
+    end: 6,
+    eye1: 3,
+    eye2: 5,
   },
   {
     filter: 0b11111111,
     stones: 0b00011000,
     blanks: 0b01100110,
-    eyes__: 0b00100100,
+    start: 1,
+    end: 6,
+    eye1: 2,
+    eye2: 5,
   },
   {
     filter: 0b11111111,
     stones: 0b00100100,
     blanks: 0b01011010,
-    eyes__: 0b00011000,
+    start: 1,
+    end: 6,
+    eye1: 3,
+    eye2: 4,
   },
   {
     filter: 0b11111111,
     stones: 0b00101000,
     blanks: 0b01010110,
-    eyes__: 0b00010100,
+    start: 1,
+    end: 6,
+    eye1: 2,
+    eye2: 4,
   },
   {
     filter: 0b11111111,
     stones: 0b00110000,
     blanks: 0b01001110,
-    eyes__: 0b00001100,
+    start: 1,
+    end: 6,
+    eye1: 2,
+    eye2: 3,
   },
 ]
 
@@ -313,25 +202,37 @@ const B_THREES: Pattern[] = [
     filter: 0b11111111,
     stones: 0b00011100,
     blanks: 0b01100010,
-    eyes__: 0b00100000,
+    start: 1,
+    end: 6,
+    eye1: 5,
+    eye2: undefined,
   },
   {
     filter: 0b11111111,
     stones: 0b00101100,
     blanks: 0b01010010,
-    eyes__: 0b00010000,
+    start: 1,
+    end: 6,
+    eye1: 4,
+    eye2: undefined,
   },
   {
     filter: 0b11111111,
     stones: 0b00110100,
     blanks: 0b01001010,
-    eyes__: 0b00001000,
+    start: 1,
+    end: 6,
+    eye1: 3,
+    eye2: undefined,
   },
   {
     filter: 0b11111111,
     stones: 0b00111000,
     blanks: 0b01000110,
-    eyes__: 0b00000100,
+    start: 1,
+    end: 6,
+    eye1: 2,
+    eye2: undefined,
   },
 ]
 
@@ -345,61 +246,91 @@ const B_SWORDS: Pattern[] = [
     filter: 0b1111111,
     stones: 0b0001110,
     blanks: 0b0110000,
-    eyes__: 0b0110000,
+    start: 1,
+    end: 5,
+    eye1: 4,
+    eye2: 5,
   },
   {
     filter: 0b1111111,
     stones: 0b0010110,
     blanks: 0b0101000,
-    eyes__: 0b0101000,
+    start: 1,
+    end: 5,
+    eye1: 3,
+    eye2: 5,
   },
   {
     filter: 0b1111111,
     stones: 0b0011010,
     blanks: 0b0100100,
-    eyes__: 0b0100100,
+    start: 1,
+    end: 5,
+    eye1: 2,
+    eye2: 5,
   },
   {
     filter: 0b1111111,
     stones: 0b0011100,
     blanks: 0b0100010,
-    eyes__: 0b0100010,
+    start: 1,
+    end: 5,
+    eye1: 1,
+    eye2: 5,
   },
   {
     filter: 0b1111111,
     stones: 0b0100110,
     blanks: 0b0011000,
-    eyes__: 0b0011000,
+    start: 1,
+    end: 5,
+    eye1: 3,
+    eye2: 4,
   },
   {
     filter: 0b1111111,
     stones: 0b0101010,
     blanks: 0b0010100,
-    eyes__: 0b0010100,
+    start: 1,
+    end: 5,
+    eye1: 2,
+    eye2: 4,
   },
   {
     filter: 0b1111111,
     stones: 0b0101100,
     blanks: 0b0010010,
-    eyes__: 0b0010010,
+    start: 1,
+    end: 5,
+    eye1: 1,
+    eye2: 4,
   },
   {
     filter: 0b1111111,
     stones: 0b0110010,
     blanks: 0b0001100,
-    eyes__: 0b0001100,
+    start: 1,
+    end: 5,
+    eye1: 2,
+    eye2: 3,
   },
   {
     filter: 0b1111111,
     stones: 0b0110100,
     blanks: 0b0001010,
-    eyes__: 0b0001010,
+    start: 1,
+    end: 5,
+    eye1: 1,
+    eye2: 3,
   },
   {
     filter: 0b1111111,
     stones: 0b0111000,
     blanks: 0b0000110,
-    eyes__: 0b0000110,
+    start: 1,
+    end: 5,
+    eye1: 1,
+    eye2: 2,
   },
 ]
 
@@ -413,31 +344,46 @@ const B_FOURS: Pattern[] = [
     filter: 0b1111111,
     stones: 0b0011110,
     blanks: 0b0100000,
-    eyes__: 0b0100000,
+    start: 1,
+    end: 5,
+    eye1: 5,
+    eye2: undefined,
   },
   {
     filter: 0b1111111,
     stones: 0b0101110,
     blanks: 0b0010000,
-    eyes__: 0b0010000,
+    start: 1,
+    end: 5,
+    eye1: 4,
+    eye2: undefined,
   },
   {
     filter: 0b1111111,
     stones: 0b0110110,
     blanks: 0b0001000,
-    eyes__: 0b0001000,
+    start: 1,
+    end: 5,
+    eye1: 3,
+    eye2: undefined,
   },
   {
     filter: 0b1111111,
     stones: 0b0111010,
     blanks: 0b0000100,
-    eyes__: 0b0000100,
+    start: 1,
+    end: 5,
+    eye1: 2,
+    eye2: undefined,
   },
   {
     filter: 0b1111111,
     stones: 0b0111100,
     blanks: 0b0000010,
-    eyes__: 0b0000010,
+    start: 1,
+    end: 5,
+    eye1: 1,
+    eye2: undefined,
   },
 ]
 
@@ -451,7 +397,10 @@ const B_FIVES: Pattern[] = [
     filter: 0b1111111,
     stones: 0b0111110,
     blanks: 0b0000000,
-    eyes__: 0b0000000,
+    start: 1,
+    end: 5,
+    eye1: undefined,
+    eye2: undefined,
   },
 ]
 
@@ -465,7 +414,10 @@ const B_OVERLINES: Pattern[] = [
     filter: 0b111111,
     stones: 0b111111,
     blanks: 0b000000,
-    eyes__: 0b000000,
+    start: 0,
+    end: 5,
+    eye1: undefined,
+    eye2: undefined,
   },
 ]
 
@@ -479,37 +431,55 @@ const W_TWOS: Pattern[] = [
     filter: 0b111111,
     stones: 0b000110,
     blanks: 0b111001,
-    eyes__: 0b011000,
+    start: 0,
+    end: 5,
+    eye1: 3,
+    eye2: 4,
   },
   {
     filter: 0b111111,
     stones: 0b001010,
     blanks: 0b110101,
-    eyes__: 0b010100,
+    start: 0,
+    end: 5,
+    eye1: 2,
+    eye2: 4,
   },
   {
     filter: 0b111111,
     stones: 0b001100,
     blanks: 0b110011,
-    eyes__: 0b010010,
+    start: 0,
+    end: 5,
+    eye1: 1,
+    eye2: 4,
   },
   {
     filter: 0b111111,
     stones: 0b010010,
     blanks: 0b101101,
-    eyes__: 0b001100,
+    start: 0,
+    end: 5,
+    eye1: 2,
+    eye2: 3,
   },
   {
     filter: 0b111111,
     stones: 0b010100,
     blanks: 0b101011,
-    eyes__: 0b001010,
+    start: 0,
+    end: 5,
+    eye1: 1,
+    eye2: 3,
   },
   {
     filter: 0b111111,
     stones: 0b011000,
     blanks: 0b100111,
-    eyes__: 0b000110,
+    start: 0,
+    end: 5,
+    eye1: 1,
+    eye2: 2,
   },
 ]
 
@@ -523,25 +493,37 @@ const W_THREES: Pattern[] = [
     filter: 0b111111,
     stones: 0b001110,
     blanks: 0b110001,
-    eyes__: 0b010000,
+    start: 0,
+    end: 5,
+    eye1: 4,
+    eye2: undefined,
   },
   {
     filter: 0b111111,
     stones: 0b010110,
     blanks: 0b101001,
-    eyes__: 0b001000,
+    start: 0,
+    end: 5,
+    eye1: 3,
+    eye2: undefined,
   },
   {
     filter: 0b111111,
     stones: 0b011010,
     blanks: 0b100101,
-    eyes__: 0b000100,
+    start: 0,
+    end: 5,
+    eye1: 2,
+    eye2: undefined,
   },
   {
     filter: 0b111111,
     stones: 0b011100,
     blanks: 0b100011,
-    eyes__: 0b000010,
+    start: 0,
+    end: 5,
+    eye1: 1,
+    eye2: undefined,
   },
 ]
 
@@ -555,61 +537,91 @@ const W_SWORDS: Pattern[] = [
     filter: 0b11111,
     stones: 0b00111,
     blanks: 0b11000,
-    eyes__: 0b11000,
+    start: 0,
+    end: 4,
+    eye1: 3,
+    eye2: 4,
   },
   {
     filter: 0b11111,
     stones: 0b01011,
     blanks: 0b10100,
-    eyes__: 0b10100,
+    start: 0,
+    end: 4,
+    eye1: 2,
+    eye2: 4,
   },
   {
     filter: 0b11111,
     stones: 0b01101,
     blanks: 0b10010,
-    eyes__: 0b10010,
+    start: 0,
+    end: 4,
+    eye1: 1,
+    eye2: 4,
   },
   {
     filter: 0b11111,
     stones: 0b01110,
     blanks: 0b10001,
-    eyes__: 0b10001,
+    start: 0,
+    end: 4,
+    eye1: 0,
+    eye2: 4,
   },
   {
     filter: 0b11111,
     stones: 0b10011,
     blanks: 0b01100,
-    eyes__: 0b01100,
+    start: 0,
+    end: 4,
+    eye1: 2,
+    eye2: 3,
   },
   {
     filter: 0b11111,
     stones: 0b10101,
     blanks: 0b01010,
-    eyes__: 0b01010,
+    start: 0,
+    end: 4,
+    eye1: 1,
+    eye2: 3,
   },
   {
     filter: 0b11111,
     stones: 0b10110,
     blanks: 0b01001,
-    eyes__: 0b01001,
+    start: 0,
+    end: 4,
+    eye1: 0,
+    eye2: 3,
   },
   {
     filter: 0b11111,
     stones: 0b11001,
     blanks: 0b00110,
-    eyes__: 0b00110,
+    start: 0,
+    end: 4,
+    eye1: 1,
+    eye2: 2,
   },
   {
     filter: 0b11111,
     stones: 0b11010,
     blanks: 0b00101,
-    eyes__: 0b00101,
+    start: 0,
+    end: 4,
+    eye1: 0,
+    eye2: 2,
   },
   {
     filter: 0b11111,
     stones: 0b11100,
     blanks: 0b00011,
-    eyes__: 0b00011,
+    start: 0,
+    end: 4,
+    eye1: 0,
+    eye2: 1,
   },
 ]
 
@@ -623,31 +635,46 @@ const W_FOURS: Pattern[] = [
     filter: 0b11111,
     stones: 0b01111,
     blanks: 0b10000,
-    eyes__: 0b10000,
+    start: 0,
+    end: 4,
+    eye1: 4,
+    eye2: undefined,
   },
   {
     filter: 0b11111,
     stones: 0b10111,
     blanks: 0b01000,
-    eyes__: 0b01000,
+    start: 0,
+    end: 4,
+    eye1: 3,
+    eye2: undefined,
   },
   {
     filter: 0b11111,
     stones: 0b11011,
     blanks: 0b00100,
-    eyes__: 0b00100,
+    start: 0,
+    end: 4,
+    eye1: 2,
+    eye2: undefined,
   },
   {
     filter: 0b11111,
     stones: 0b11101,
     blanks: 0b00010,
-    eyes__: 0b00010,
+    start: 0,
+    end: 4,
+    eye1: 1,
+    eye2: undefined,
   },
   {
     filter: 0b11111,
     stones: 0b11110,
     blanks: 0b00001,
-    eyes__: 0b00001,
+    start: 0,
+    end: 4,
+    eye1: 0,
+    eye2: undefined,
   },
 ]
 
@@ -661,6 +688,9 @@ const W_FIVES: Pattern[] = [
     filter: 0b11111,
     stones: 0b11111,
     blanks: 0b00000,
-    eyes__: 0b00000,
+    start: 0,
+    end: 4,
+    eye1: undefined,
+    eye2: undefined,
   },
 ]

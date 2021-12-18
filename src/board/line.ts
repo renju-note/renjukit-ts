@@ -1,5 +1,5 @@
 import { Bits, BOARD_SIZE, isBlack, Player, RowKind } from "./fundamentals"
-import { scanSegments, Segment } from "./segment"
+import { scanSequences, Sequence } from "./sequence"
 
 export type Line = {
   size: number
@@ -33,7 +33,7 @@ export type WrappedLine = {
   unwrap: () => Line
   put: (player: Player, i: number) => WrappedLine
   stones: () => (Player | undefined)[]
-  segments: (player: Player, kind: RowKind) => Segment[]
+  sequences: (player: Player, kind: RowKind) => Sequence[]
   eq: (other: Line) => boolean
   toString: () => string
 }
@@ -42,7 +42,7 @@ export const wrapLine = (self: Line): WrappedLine => ({
   unwrap: () => self,
   put: put(self),
   stones: stones(self),
-  segments: segments(self),
+  sequences: sequences(self),
   eq: eq(self),
   toString: toString(self),
 })
@@ -80,15 +80,15 @@ const stones = (self: Line) => (): (Player | undefined)[] => {
   })
 }
 
-const segments =
+const sequences =
   (self: Line) =>
-  (player: Player, kind: RowKind): Segment[] => {
+  (player: Player, kind: RowKind): Sequence[] => {
     if (!mayContain(self, player, kind)) return []
     const offset = 1
     const stones_ = (isBlack(player) ? self.blacks : self.whites) << 1
     const blanks_ = blanks(self) << 1
     const limit = self.size + offset * 2
-    return scanSegments(player, kind, stones_, blanks_, limit, 1)
+    return scanSequences(player, kind, stones_, blanks_, limit, 1)
   }
 
 const eq = (self: Line) => (other: Line) =>

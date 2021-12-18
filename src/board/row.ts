@@ -1,5 +1,5 @@
 import { Direction, Point, wrapIndex } from "./point"
-import { Segment } from "./segment"
+import { Sequence } from "./sequence"
 
 export type Row = {
   direction: Direction
@@ -9,7 +9,7 @@ export type Row = {
   eye2: Point | undefined
 }
 
-export const makeRow = (r: Segment, d: Direction, i: number): Row => ({
+export const makeRow = (r: Sequence, d: Direction, i: number): Row => ({
   direction: d,
   start: wrapIndex([i, r.start]).toPoint(d),
   end: wrapIndex([i, r.end]).toPoint(d),
