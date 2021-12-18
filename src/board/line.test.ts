@@ -25,6 +25,22 @@ test("put", () => {
   expect(line.unwrap().whites).toBe(0b000000000100100)
 })
 
+test("remove", () => {
+  let line = wrapLine(parseLine("o-ox-")!)
+
+  line = line.remove(0)
+  expect(line.unwrap().blacks).toBe(0b00100)
+  expect(line.unwrap().whites).toBe(0b01000)
+
+  line = line.remove(1)
+  expect(line.unwrap().blacks).toBe(0b00100)
+  expect(line.unwrap().whites).toBe(0b01000)
+
+  line = line.remove(3)
+  expect(line.unwrap().blacks).toBe(0b00100)
+  expect(line.unwrap().whites).toBe(0b00000)
+})
+
 test("stones", () => {
   const line = wrapLine(parseLine("o-ox-")!)
   const result = line.stones()
