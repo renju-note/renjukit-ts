@@ -70,12 +70,11 @@ const scan = (
     for (const p of patterns) {
       const p_ = wrapPattern(p)
       if (!p_.matches(stones_, blanks_)) continue
-      const position = i - offset
       result.push({
-        start: p.start + position,
-        end: p.end + position,
-        eye1: p.eye1 === undefined ? undefined : p.eye1 + position,
-        eye2: p.eye2 === undefined ? undefined : p.eye2 + position,
+        start: p.start + i - offset,
+        end: p.end + i - offset,
+        eye1: p.eye1 === undefined ? undefined : p.eye1 + i - offset,
+        eye2: p.eye2 === undefined ? undefined : p.eye2 + i - offset,
       })
     }
   }
