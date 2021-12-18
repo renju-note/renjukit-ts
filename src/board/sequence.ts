@@ -62,14 +62,12 @@ const scan = (
   if (limit < size) {
     return result
   }
-  const window_ = wrapWindow(window)
   for (let i = 0; i <= limit - size; i++) {
     const stones_ = stones >> i
     const blanks_ = blanks >> i
-    if (!window_.satisfies(stones_, blanks_)) continue
+    if (!wrapWindow(window).satisfies(stones_, blanks_)) continue
     for (const p of patterns) {
-      const p_ = wrapPattern(p)
-      if (!p_.matches(stones_, blanks_)) continue
+      if (!wrapPattern(p).matches(stones_, blanks_)) continue
       result.push({
         start: p.start + i - offset,
         end: p.end + i - offset,
