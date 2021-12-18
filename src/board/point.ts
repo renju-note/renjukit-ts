@@ -84,11 +84,8 @@ const encode =
 
 const toString =
   ([x, y]: Point) =>
-  (): string => {
-    const sx = X_CODES.charAt(x)
-    const sy = (y + 1).toString()
-    return `${sx}${sy}`
-  }
+  (): string =>
+    `${pointXToString(x)}${pointYToString(y)}`
 
 export type Index = [number, number]
 
@@ -128,7 +125,9 @@ const toPoint =
 export type Points = Point[]
 
 export const parsePoints = (s: string): Points | undefined => {
-  const ps = s.split(",").map(parsePoint)
+  const ss = s.match(/[a-oA-O][0-9]+/g)
+  if (!ss) return
+  const ps = ss.map(parsePoint)
   if (ps.some(p => p === undefined)) return undefined
   return ps.map(p => p!)
 }
@@ -154,6 +153,10 @@ export const wrapPoints = (self: Points): WrappedPoints => ({
 const toStringPoints = (self: Points) => (): string => self.map(p => toString(p)()).join(",")
 
 const encodePoints = (self: Points) => (): Uint8Array => new Uint8Array(self.map(p => encode(p)()))
+
+export const pointXToString = (x: number): string => X_CODES.charAt(x)
+
+export const pointYToString = (y: number): string => (y + 1).toString()
 
 const X_CODES = "ABCDEFGHIJKLMNO"
 
