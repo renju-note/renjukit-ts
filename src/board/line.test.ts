@@ -62,7 +62,7 @@ test("rows", () => {
   expect(result).toEqual(expected)
 
   result = line.sequences(Player.white, RowKind.two)
-  expected = [{ start: 7, end: 12, eye1: 9, eye2: 10 }]
+  expected = [{ start: 8, end: 11, eye1: 9, eye2: 10 }]
   expect(result).toEqual(expected)
 })
 

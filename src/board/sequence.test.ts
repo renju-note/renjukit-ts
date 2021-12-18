@@ -35,7 +35,7 @@ test("scanSequences", () => {
   let expected: Sequence[] = []
 
   result = scanSequences(Player.white, RowKind.three, stones, blanks, 7, 0)
-  expected = [{ start: 1, end: 6, eye1: 5, eye2: undefined }]
+  expected = [{ start: 2, end: 5, eye1: 5, eye2: undefined }]
   expect(result).toEqual(expected)
   expect(result).toEqual(expected)
 
@@ -44,7 +44,7 @@ test("scanSequences", () => {
   expect(result).toEqual(expected)
 
   result = scanSequences(Player.white, RowKind.three, stones, blanks, 7, 1)
-  expected = [{ start: 0, end: 5, eye1: 4, eye2: undefined }]
+  expected = [{ start: 1, end: 4, eye1: 4, eye2: undefined }]
   expect(result).toEqual(expected)
 })
 
@@ -53,42 +53,42 @@ test("black two", () => {
   let expected: Sequence[] = []
 
   result = scanSequences(Player.black, RowKind.two, 0b00001100, 0b01110010, 8, 0)
-  expected = [{ start: 1, end: 6, eye1: 4, eye2: 5 }]
+  expected = [{ start: 2, end: 5, eye1: 4, eye2: 5 }]
   expect(result).toEqual(expected)
 
   result = scanSequences(Player.black, RowKind.two, 0b00010100, 0b01101010, 8, 0)
-  expected = [{ start: 1, end: 6, eye1: 3, eye2: 5 }]
+  expected = [{ start: 2, end: 5, eye1: 3, eye2: 5 }]
   expect(result).toEqual(expected)
 
   result = scanSequences(Player.black, RowKind.two, 0b00011000, 0b01100110, 8, 0)
-  expected = [{ start: 1, end: 6, eye1: 2, eye2: 5 }]
+  expected = [{ start: 2, end: 5, eye1: 2, eye2: 5 }]
   expect(result).toEqual(expected)
 
   result = scanSequences(Player.black, RowKind.two, 0b00100100, 0b01011010, 8, 0)
-  expected = [{ start: 1, end: 6, eye1: 3, eye2: 4 }]
+  expected = [{ start: 2, end: 5, eye1: 3, eye2: 4 }]
   expect(result).toEqual(expected)
 
   result = scanSequences(Player.black, RowKind.two, 0b00101000, 0b01010110, 8, 0)
-  expected = [{ start: 1, end: 6, eye1: 2, eye2: 4 }]
+  expected = [{ start: 2, end: 5, eye1: 2, eye2: 4 }]
   expect(result).toEqual(expected)
 
   result = scanSequences(Player.black, RowKind.two, 0b00110000, 0b01001110, 8, 0)
-  expected = [{ start: 1, end: 6, eye1: 2, eye2: 3 }]
+  expected = [{ start: 2, end: 5, eye1: 2, eye2: 3 }]
   expect(result).toEqual(expected)
 
   // two twos
   result = scanSequences(Player.black, RowKind.two, 0b000101000, 0b111010111, 9, 0)
   expected = [
-    { start: 1, end: 6, eye1: 2, eye2: 4 },
-    { start: 2, end: 7, eye1: 4, eye2: 6 },
+    { start: 2, end: 5, eye1: 2, eye2: 4 },
+    { start: 3, end: 6, eye1: 4, eye2: 6 },
   ]
   expect(result).toEqual(expected)
 
   // two twos
   result = scanSequences(Player.black, RowKind.two, 0b00100100100, 0b01011011010, 11, 0)
   expected = [
-    { start: 1, end: 6, eye1: 3, eye2: 4 },
-    { start: 4, end: 9, eye1: 6, eye2: 7 },
+    { start: 2, end: 5, eye1: 3, eye2: 4 },
+    { start: 5, end: 8, eye1: 6, eye2: 7 },
   ]
   expect(result).toEqual(expected)
 
@@ -108,26 +108,26 @@ test("black three", () => {
   let expected: Sequence[] = []
 
   result = scanSequences(Player.black, RowKind.three, 0b00011100, 0b01100010, 8, 0)
-  expected = [{ start: 1, end: 6, eye1: 5, eye2: undefined }]
+  expected = [{ start: 2, end: 5, eye1: 5, eye2: undefined }]
   expect(result).toEqual(expected)
 
   result = scanSequences(Player.black, RowKind.three, 0b00101100, 0b01010010, 8, 0)
-  expected = [{ start: 1, end: 6, eye1: 4, eye2: undefined }]
+  expected = [{ start: 2, end: 5, eye1: 4, eye2: undefined }]
   expect(result).toEqual(expected)
 
   result = scanSequences(Player.black, RowKind.three, 0b00110100, 0b01001010, 8, 0)
-  expected = [{ start: 1, end: 6, eye1: 3, eye2: undefined }]
+  expected = [{ start: 2, end: 5, eye1: 3, eye2: undefined }]
   expect(result).toEqual(expected)
 
   result = scanSequences(Player.black, RowKind.three, 0b00111000, 0b01000110, 8, 0)
-  expected = [{ start: 1, end: 6, eye1: 2, eye2: undefined }]
+  expected = [{ start: 2, end: 5, eye1: 2, eye2: undefined }]
   expect(result).toEqual(expected)
 
   // two threes
   result = scanSequences(Player.white, RowKind.three, 0b000111000, 0b111000111, 9, 0)
   expected = [
-    { start: 1, end: 6, eye1: 2, eye2: undefined },
-    { start: 2, end: 7, eye1: 6, eye2: undefined },
+    { start: 2, end: 5, eye1: 2, eye2: undefined },
+    { start: 3, end: 6, eye1: 6, eye2: undefined },
   ]
   expect(result).toEqual(expected)
 
@@ -318,34 +318,34 @@ test("white two", () => {
   let expected: Sequence[] = []
 
   result = scanSequences(Player.white, RowKind.two, 0b000110, 0b111001, 6, 0)
-  expected = [{ start: 0, end: 5, eye1: 3, eye2: 4 }]
+  expected = [{ start: 1, end: 4, eye1: 3, eye2: 4 }]
   expect(result).toEqual(expected)
 
   result = scanSequences(Player.white, RowKind.two, 0b001010, 0b110101, 6, 0)
-  expected = [{ start: 0, end: 5, eye1: 2, eye2: 4 }]
+  expected = [{ start: 1, end: 4, eye1: 2, eye2: 4 }]
   expect(result).toEqual(expected)
 
   result = scanSequences(Player.white, RowKind.two, 0b001100, 0b110011, 6, 0)
-  expected = [{ start: 0, end: 5, eye1: 1, eye2: 4 }]
+  expected = [{ start: 1, end: 4, eye1: 1, eye2: 4 }]
   expect(result).toEqual(expected)
 
   result = scanSequences(Player.white, RowKind.two, 0b010010, 0b101101, 6, 0)
-  expected = [{ start: 0, end: 5, eye1: 2, eye2: 3 }]
+  expected = [{ start: 1, end: 4, eye1: 2, eye2: 3 }]
   expect(result).toEqual(expected)
 
   result = scanSequences(Player.white, RowKind.two, 0b010100, 0b101011, 6, 0)
-  expected = [{ start: 0, end: 5, eye1: 1, eye2: 3 }]
+  expected = [{ start: 1, end: 4, eye1: 1, eye2: 3 }]
   expect(result).toEqual(expected)
 
   result = scanSequences(Player.white, RowKind.two, 0b011000, 0b100111, 6, 0)
-  expected = [{ start: 0, end: 5, eye1: 1, eye2: 2 }]
+  expected = [{ start: 1, end: 4, eye1: 1, eye2: 2 }]
   expect(result).toEqual(expected)
 
   // two twos
   result = scanSequences(Player.white, RowKind.two, 0b010010010, 0b101101101, 9, 0)
   expected = [
-    { start: 0, end: 5, eye1: 2, eye2: 3 },
-    { start: 3, end: 8, eye1: 5, eye2: 6 },
+    { start: 1, end: 4, eye1: 2, eye2: 3 },
+    { start: 4, end: 7, eye1: 5, eye2: 6 },
   ]
   expect(result).toEqual(expected)
 
@@ -360,26 +360,26 @@ test("white three", () => {
   let expected: Sequence[] = []
 
   result = scanSequences(Player.white, RowKind.three, 0b001110, 0b110001, 6, 0)
-  expected = [{ start: 0, end: 5, eye1: 4, eye2: undefined }]
+  expected = [{ start: 1, end: 4, eye1: 4, eye2: undefined }]
   expect(result).toEqual(expected)
 
   result = scanSequences(Player.white, RowKind.three, 0b010110, 0b101001, 6, 0)
-  expected = [{ start: 0, end: 5, eye1: 3, eye2: undefined }]
+  expected = [{ start: 1, end: 4, eye1: 3, eye2: undefined }]
   expect(result).toEqual(expected)
 
   result = scanSequences(Player.white, RowKind.three, 0b011010, 0b100101, 6, 0)
-  expected = [{ start: 0, end: 5, eye1: 2, eye2: undefined }]
+  expected = [{ start: 1, end: 4, eye1: 2, eye2: undefined }]
   expect(result).toEqual(expected)
 
   result = scanSequences(Player.white, RowKind.three, 0b011100, 0b100011, 6, 0)
-  expected = [{ start: 0, end: 5, eye1: 1, eye2: undefined }]
+  expected = [{ start: 1, end: 4, eye1: 1, eye2: undefined }]
   expect(result).toEqual(expected)
 
   // two threes
   result = scanSequences(Player.white, RowKind.three, 0b0011100, 0b1100011, 7, 0)
   expected = [
-    { start: 0, end: 5, eye1: 1, eye2: undefined },
-    { start: 1, end: 6, eye1: 5, eye2: undefined },
+    { start: 1, end: 4, eye1: 1, eye2: undefined },
+    { start: 2, end: 5, eye1: 5, eye2: undefined },
   ]
   expect(result).toEqual(expected)
 

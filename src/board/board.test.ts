@@ -37,19 +37,19 @@ test("put,rows,rowsOn,forbiddens,forbidden,toString", () => {
   expect(board.toString()).toBe(expected)
 
   const blackTwos: Row[] = [
-    { direction: Direction.vertical, start: [6, 5], end: [6, 10], eye1: [6, 6], eye2: [6, 7] },
-    { direction: Direction.vertical, start: [6, 6], end: [6, 11], eye1: [6, 7], eye2: [6, 10] },
-    { direction: Direction.vertical, start: [6, 7], end: [6, 12], eye1: [6, 10], eye2: [6, 11] },
-    { direction: Direction.horizontal, start: [4, 7], end: [9, 7], eye1: [5, 7], eye2: [6, 7] },
-    { direction: Direction.horizontal, start: [5, 7], end: [10, 7], eye1: [6, 7], eye2: [9, 7] },
-    { direction: Direction.horizontal, start: [6, 7], end: [11, 7], eye1: [9, 7], eye2: [10, 7] },
+    { direction: Direction.vertical, start: [6, 6], end: [6, 9], eye1: [6, 6], eye2: [6, 7] },
+    { direction: Direction.vertical, start: [6, 7], end: [6, 10], eye1: [6, 7], eye2: [6, 10] },
+    { direction: Direction.vertical, start: [6, 8], end: [6, 11], eye1: [6, 10], eye2: [6, 11] },
+    { direction: Direction.horizontal, start: [5, 7], end: [8, 7], eye1: [5, 7], eye2: [6, 7] },
+    { direction: Direction.horizontal, start: [6, 7], end: [9, 7], eye1: [6, 7], eye2: [9, 7] },
+    { direction: Direction.horizontal, start: [7, 7], end: [10, 7], eye1: [9, 7], eye2: [10, 7] },
   ]
   const whiteTwos: Row[] = [
-    { direction: Direction.horizontal, start: [4, 6], end: [9, 6], eye1: [6, 6], eye2: [7, 6] },
-    { direction: Direction.ascending, start: [6, 7], end: [11, 12], eye1: [9, 10], eye2: [10, 11] },
+    { direction: Direction.horizontal, start: [5, 6], end: [8, 6], eye1: [6, 6], eye2: [7, 6] },
+    { direction: Direction.ascending, start: [7, 8], end: [10, 11], eye1: [9, 10], eye2: [10, 11] },
   ]
   const whiteThrees: Row[] = [
-    { direction: Direction.ascending, start: [4, 5], end: [9, 10], eye1: [6, 7], eye2: undefined },
+    { direction: Direction.ascending, start: [5, 6], end: [8, 9], eye1: [6, 7], eye2: undefined },
   ]
 
   expect(board.rows(Player.black, RowKind.two)).toEqual(blackTwos)
