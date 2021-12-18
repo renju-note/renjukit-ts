@@ -16,25 +16,15 @@ test("matches", () => {
     filter: 0b1111111,
     stones: 0b0101010,
     blanks: 0b0010100,
-    eyes__: 0b0010100,
+    start: 1,
+    end: 5,
+    eye1: 2,
+    eye2: 4,
   })
   expect(pattern.matches(0b0101010, 0b0010100)).toBe(true)
   expect(pattern.matches(0b0101010, 0b1010101)).toBe(true)
   expect(pattern.matches(0b0101000, 0b0010100)).toBe(false)
   expect(pattern.matches(0b0101001, 0b0010100)).toBe(false)
-})
-
-test("start,end,eye1,eye1", () => {
-  const pattern = wrapPattern({
-    filter: 0b1111111,
-    stones: 0b0101010,
-    blanks: 0b0010100,
-    eyes__: 0b0010100,
-  })
-  expect(pattern.start()).toEqual(1)
-  expect(pattern.end()).toEqual(5)
-  expect(pattern.eye1()).toEqual(2)
-  expect(pattern.eye2()).toEqual(4)
 })
 
 test("scanSegments", () => {
