@@ -44,8 +44,7 @@ const overline = (next: WrappedSquare, p: Point): boolean => {
 
 const doubleFour = (next: WrappedSquare, p: Point): boolean => {
   const newFours = next.rowsOn(Player.black, RowKind.four, p)
-  if (newFours.length < 2) return false
-  return distinctive(newFours)
+  return newFours.length >= 2 && distinctive(newFours)
 }
 
 const doubleThree = (next: WrappedSquare, p: Point): boolean => {
@@ -54,8 +53,7 @@ const doubleThree = (next: WrappedSquare, p: Point): boolean => {
   const truthyThrees = newThrees.filter(
     r => forbidden(next.unwrap(), r.eye1 as Point) === undefined
   )
-  if (truthyThrees.length < 2) return false
-  return distinctive(truthyThrees)
+  return truthyThrees.length >= 2 && distinctive(truthyThrees)
 }
 
 const distinctive = (rows: Row[]): boolean => {
