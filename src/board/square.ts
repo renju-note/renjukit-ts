@@ -138,26 +138,18 @@ const put =
   (self: Square) =>
   (player: Player, p: Point): WrappedSquare => {
     const wp = wrapPoint(p)
-    const vidx = wp.toIndex(Direction.vertical)
-    const vlines = self.vlines.map((l, i) =>
-      i === vidx[0] ? wrapLine(l).put(player, vidx[1]).unwrap() : l
+    const [vi, vj] = wp.toIndex(Direction.vertical)
+    const vlines = self.vlines.map((l, i) => (i === vi ? wrapLine(l).put(player, vj).unwrap() : l))
+    const [hi, hj] = wp.toIndex(Direction.horizontal)
+    const hlines = self.hlines.map((l, i) => (i === hi ? wrapLine(l).put(player, hj).unwrap() : l))
+    const [ai, aj] = wp.toIndex(Direction.ascending)
+    const alines = self.alines.map((l, i) =>
+      i === ai - 4 ? wrapLine(l).put(player, aj).unwrap() : l
     )
-    const hidx = wp.toIndex(Direction.horizontal)
-    const hlines = self.hlines.map((l, i) =>
-      i === hidx[0] ? wrapLine(l).put(player, hidx[1]).unwrap() : l
+    const [di, dj] = wp.toIndex(Direction.descending)
+    const dlines = self.dlines.map((l, i) =>
+      i === di - 4 ? wrapLine(l).put(player, dj).unwrap() : l
     )
-    const aidx = wp.toIndex(Direction.ascending)
-    const alines = bw(4, aidx[0], D_LINE_NUM + 3)
-      ? self.alines.map((l, i) =>
-          i === aidx[0] - 4 ? wrapLine(l).put(player, aidx[1]).unwrap() : l
-        )
-      : self.alines
-    const didx = wp.toIndex(Direction.descending)
-    const dlines = bw(4, didx[0], D_LINE_NUM + 3)
-      ? self.dlines.map((l, i) =>
-          i === didx[0] - 4 ? wrapLine(l).put(player, didx[1]).unwrap() : l
-        )
-      : self.dlines
     return wrapSquare({
       vlines: vlines,
       hlines: hlines,
@@ -170,22 +162,14 @@ const remove =
   (self: Square) =>
   (p: Point): WrappedSquare => {
     const wp = wrapPoint(p)
-    const vidx = wp.toIndex(Direction.vertical)
-    const vlines = self.vlines.map((l, i) =>
-      i === vidx[0] ? wrapLine(l).remove(vidx[1]).unwrap() : l
-    )
-    const hidx = wp.toIndex(Direction.horizontal)
-    const hlines = self.hlines.map((l, i) =>
-      i === hidx[0] ? wrapLine(l).remove(hidx[1]).unwrap() : l
-    )
-    const aidx = wp.toIndex(Direction.ascending)
-    const alines = bw(4, aidx[0], D_LINE_NUM + 3)
-      ? self.alines.map((l, i) => (i === aidx[0] - 4 ? wrapLine(l).remove(aidx[1]).unwrap() : l))
-      : self.alines
-    const didx = wp.toIndex(Direction.descending)
-    const dlines = bw(4, didx[0], D_LINE_NUM + 3)
-      ? self.dlines.map((l, i) => (i === didx[0] - 4 ? wrapLine(l).remove(didx[1]).unwrap() : l))
-      : self.dlines
+    const [vi, vj] = wp.toIndex(Direction.vertical)
+    const vlines = self.vlines.map((l, i) => (i === vi ? wrapLine(l).remove(vj).unwrap() : l))
+    const [hi, hj] = wp.toIndex(Direction.horizontal)
+    const hlines = self.hlines.map((l, i) => (i === hi ? wrapLine(l).remove(hj).unwrap() : l))
+    const [ai, aj] = wp.toIndex(Direction.ascending)
+    const alines = self.alines.map((l, i) => (i === ai - 4 ? wrapLine(l).remove(aj).unwrap() : l))
+    const [di, dj] = wp.toIndex(Direction.descending)
+    const dlines = self.dlines.map((l, i) => (i === di - 4 ? wrapLine(l).remove(dj).unwrap() : l))
     return wrapSquare({
       vlines: vlines,
       hlines: hlines,
