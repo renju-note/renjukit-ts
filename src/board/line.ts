@@ -99,10 +99,10 @@ const sequences =
   (self: Line) =>
   (player: Player, kind: RowKind): Sequence[] => {
     const offset = 1
-    const stones_ = (isBlack(player) ? self.blacks : self.whites) << 1
-    const blanks_ = blanks(self) << 1
+    const stones_ = (isBlack(player) ? self.blacks : self.whites) << offset
+    const blanks_ = blanks(self) << offset
     const limit = self.size + offset * 2
-    return scanSequences(player, kind, stones_, blanks_, limit, 1)
+    return scanSequences(player, kind, stones_, blanks_, limit, offset)
   }
 
 const eq = (self: Line) => (other: Line) =>
