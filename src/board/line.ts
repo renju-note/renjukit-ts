@@ -98,7 +98,6 @@ const stones = (self: Line) => (): (Player | undefined)[] => {
 const sequences =
   (self: Line) =>
   (player: Player, kind: RowKind): Sequence[] => {
-    if (!mayContain(self, player, kind)) return []
     const offset = 1
     const stones_ = (isBlack(player) ? self.blacks : self.whites) << 1
     const blanks_ = blanks(self) << 1
@@ -122,63 +121,4 @@ const toString = (self: Line) => (): string =>
     })
     .join("")
 
-const mayContain = (self: Line, player: Player, kind: RowKind): boolean => {
-  const blanks_ = blanks(self)
-  const minBlank = minBlankCount(kind)
-  if (countOnes(blanks_) < minBlank) return false
-
-  const minStone = minStoneCount(kind)
-  if (isBlack(player)) {
-    return countOnes(self.blacks) >= minStone
-  } else {
-    return countOnes(self.whites) >= minStone
-  }
-}
-
 const blanks = (self: Line): Bits => ~(self.blacks | self.whites) & ((0b1 << self.size) - 1)
-
-const minStoneCount = (kind: RowKind): number => {
-  switch (kind) {
-    case RowKind.two:
-      return 2
-    case RowKind.sword:
-      return 3
-    case RowKind.three:
-      return 3
-    case RowKind.four:
-      return 4
-    case RowKind.five:
-      return 5
-    case RowKind.overline:
-      return 6
-    default:
-      return 0
-  }
-}
-
-const minBlankCount = (kind: RowKind): number => {
-  switch (kind) {
-    case RowKind.two:
-      return 4
-    case RowKind.sword:
-      return 2
-    case RowKind.three:
-      return 3
-    case RowKind.four:
-      return 1
-    case RowKind.five:
-      return 0
-    case RowKind.overline:
-      return 0
-    default:
-      return 0
-  }
-}
-
-const countOnes = (bits: Bits): number => {
-  let result = 0
-  for (let i = 0; i < BOARD_SIZE; i++) {
-    if (((0b1 << i) & bits) !== 0b0) result++
-  }
-  return result
-}
