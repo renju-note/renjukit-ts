@@ -28,6 +28,7 @@ export type WrappedGame = {
   isBlackTurn: () => boolean
   size: () => number
   empty: () => boolean
+  inverted: () => boolean
   toString: (separator?: string) => string
 }
 
@@ -45,6 +46,7 @@ export const wrapGame = (self: Game): WrappedGame => ({
   isBlackTurn: isBlackTurn(self),
   size: size(self),
   empty: empty(self),
+  inverted: inverted(self),
   toString: toString(self),
 })
 
@@ -88,15 +90,20 @@ const whites = (self: Game) => () => {
   return self.moves.filter((p, i) => i % 2 === r)
 }
 
-const lastMove = (self: Game) => () => self.moves[self.moves.length - 1]
+const isBlackTurn = (self: Game) => () => {
+  const r = self.inverted ? 1 : 0
+  return self.moves.length % 2 === r
+}
 
-const isBlackTurn = (self: Game) => () => self.moves.length % 2 === (self.inverted ? 1 : 0)
+const lastMove = (self: Game) => () => self.moves[self.moves.length - 1]
 
 const size = (self: Game) => () => self.moves.length
 
 const empty = (self: Game) => () => self.moves.length === 0
 
+const inverted = (self: Game) => () => self.inverted
+
 const toString =
   (self: Game) =>
-  (separator: string = "") =>
+  (separator: string = ",") =>
     wrapPoints(self.moves).toString(separator)
